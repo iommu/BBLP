@@ -49,7 +49,10 @@
         }
       },
       "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "via_dangling|147955000|93345000|ee315307-efbd-4d44-b6fd-7dbb20c546b7|00000000-0000-0000-0000-000000000000",
+        "via_dangling|147955000|94615011|9b5d3cee-c293-41dc-b239-184e0abdb9c6|00000000-0000-0000-0000-000000000000"
+      ],
       "meta": {
         "version": 2
       },
@@ -389,6 +392,12 @@
       "version": 0
     },
     "net_format_name": "",
+    "ngspice": {
+      "meta": {
+        "version": 0
+      },
+      "model_mode": 0
+    },
     "page_layout_descr_file": "",
     "plot_directory": "",
     "spice_adjust_passive_values": false,
@@ -398,7 +407,7 @@
   },
   "sheets": [
     [
-      "a6e11ef1-4c00-4b7e-a0b0-5dd4e4947438",
+      "8312197d-d569-4fe3-a32d-918b3129c3c6",
       ""
     ]
   ],
