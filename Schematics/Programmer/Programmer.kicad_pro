@@ -49,7 +49,12 @@
         }
       },
       "diff_pair_dimensions": [],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "clearance|99142000|70082000|6a300260-52e8-4bd4-a70c-0c2c89b2f321|80506baa-6b48-437a-8373-16e61d28b392",
+        "clearance|99142000|74952000|550a1c53-fa64-49f6-b30c-25f7557fe14d|3e4171ff-4082-4a16-a191-f92a8422e324",
+        "clearance|99157000|70067000|15f4c7ea-085f-4c0e-9c18-8f9fc9214885|80506baa-6b48-437a-8373-16e61d28b392",
+        "clearance|99157000|74967000|76ed4487-91c3-40fe-8338-e3fdc94987ed|3e4171ff-4082-4a16-a191-f92a8422e324"
+      ],
       "meta": {
         "version": 2
       },
@@ -398,7 +403,7 @@
   },
   "sheets": [
     [
-      "2c1953eb-be7b-4db1-bef0-d40990bea362",
+      "74ce7452-a7d2-4658-a74f-f2cb84413dcb",
       ""
     ]
   ],
