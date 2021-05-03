@@ -1,3 +1,4 @@
 (fp_lib_table
   (lib (name "libs")(type "KiCad")(uri "${KIPRJMOD}/libs")(options "")(descr ""))
+  (lib (name "PHB2UOATS1A")(type "KiCad")(uri "${KIPRJMOD}/libs/PHB2UOATS1A.pretty")(options "")(descr ""))
 )

@@ -389,6 +389,12 @@
       "version": 0
     },
     "net_format_name": "",
+    "ngspice": {
+      "meta": {
+        "version": 0
+      },
+      "model_mode": 0
+    },
     "page_layout_descr_file": "",
     "plot_directory": "",
     "spice_adjust_passive_values": false,
@@ -396,6 +402,19 @@
     "subpart_first_id": 65,
     "subpart_id_separator": 0
   },
-  "sheets": [],
+  "sheets": [
+    [
+      "82219013-173d-41b7-bbe5-d927215bcfc2",
+      ""
+    ],
+    [
+      "82219013-173d-41b7-bbe5-d927215bcfc2",
+      "power array"
+    ],
+    [
+      "d8de6d54-5621-4434-9416-af7794b4515d",
+      "IOBoard connectors"
+    ]
+  ],
   "text_variables": {}
 }

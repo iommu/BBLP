@@ -1,0 +1,135 @@
+** Drc report for /home/iommu/Desktop/ECTE457/BBLP/Schematics/SubCircuits/SubCircuits.kicad_pcb **
+** Created on 2021-05-03 13:39:53 **
+
+** Found 13 DRC violations **
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1270 mm) Severity: error (excluded)
+    @(127.6350 mm, 80.3910 mm): Via [/STM32/D1] on F.Cu - B.Cu
+    @(-0.9000 mm, -0.3000 mm): Polygon on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1960 mm) Severity: error (excluded)
+    @(120.3390 mm, 72.4285 mm): Via [GND] on F.Cu - B.Cu
+    @(121.2850 mm, 71.7680 mm): Pad 1 of C15 on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0000 mm) Severity: error (excluded)
+    @(127.7620 mm, 75.0570 mm): Via [/STM32/D0] on F.Cu - B.Cu
+    @(-0.9000 mm, -0.3000 mm): Polygon on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0000 mm) Severity: error (excluded)
+    @(127.7620 mm, 78.9640 mm): Pad 1 of JP2 on F.Cu
+    @(-0.9000 mm, -0.3000 mm): Polygon on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0000 mm) Severity: error (excluded)
+    @(127.7620 mm, 80.2640 mm): Pad 2 of JP2 on F.Cu
+    @(-0.9000 mm, -0.3000 mm): Polygon on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0000 mm) Severity: error (excluded)
+    @(127.7620 mm, 76.3570 mm): Pad 1 of JP1 on F.Cu
+    @(-0.9000 mm, -0.3000 mm): Polygon on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.0000 mm) Severity: error (excluded)
+    @(127.7620 mm, 75.0570 mm): Pad 2 of JP1 on F.Cu
+    @(-0.9000 mm, -0.3000 mm): Polygon on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1796 mm) Severity: error (excluded)
+    @(82.6770 mm, 56.1340 mm): Zone [VBUS] on F.Cu
+    @(83.1850 mm, 54.8640 mm): Zone [Net-(C3-Pad1)] on F.Cu
+[clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1796 mm) Severity: error (excluded)
+    @(82.6770 mm, 56.1340 mm): Zone [VBUS] on F.Cu
+    @(83.1850 mm, 54.8640 mm): Zone [Net-(C3-Pad1)] on F.Cu
+[drill_out_of_range]: Drill out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm) Severity: error (excluded)
+    @(129.5175 mm, 60.0710 mm): Through hole pad 11 of U2
+[drill_out_of_range]: Drill out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm) Severity: error (excluded)
+    @(128.5675 mm, 60.6460 mm): Through hole pad 11 of U2
+[drill_out_of_range]: Drill out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm) Severity: error (excluded)
+    @(128.5675 mm, 59.4960 mm): Through hole pad 11 of U2
+[drill_out_of_range]: Drill out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm) Severity: error (excluded)
+    @(127.6175 mm, 60.0710 mm): Through hole pad 11 of U2
+
+** Found 6 unconnected pads **
+[unconnected_items]: Missing connection between items Severity: error
+    @(74.1980 mm, 61.3430 mm): Through hole pad S1 of J1
+    @(73.0140 mm, 69.4950 mm): Track [GND] on F.Cu, length 5.0151 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(128.4405 mm, 63.3730 mm): Pad 2 of C7 on F.Cu
+    @(121.2850 mm, 70.2180 mm): Track [GND] on F.Cu, length 1.5240 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(75.2155 mm, 94.2325 mm): Track [GND] on B.Cu, length 23.5890 mm
+    @(72.3465 mm, 82.3420 mm): Track [GND] on F.Cu, length 1.7175 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(129.8375 mm, 62.3570 mm): Via [+3V3] on F.Cu - B.Cu
+    @(122.6960 mm, 71.8810 mm): Track [+3V3] on F.Cu, length 0.1598 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(78.9665 mm, 77.3255 mm): Track [+3V3] on F.Cu, length 2.9580 mm
+    @(77.8210 mm, 94.1070 mm): Track [+3V3] on F.Cu, length 1.7536 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(119.2630 mm, 92.1620 mm): Track [+3V3] on B.Cu, length 3.0180 mm
+    @(101.2190 mm, 94.1070 mm): Track [+3V3] on F.Cu, length 1.2700 mm
+
+** Found 36 Footprint errors **
+[net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadA5)). Severity: warning
+    @(75.1130 mm, 55.7730 mm): Pad A5 of J1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadA6)). Severity: warning
+    @(75.1130 mm, 56.7730 mm): Pad A6 of J1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadA7)). Severity: warning
+    @(75.1130 mm, 57.2730 mm): Pad A7 of J1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadA8)). Severity: warning
+    @(75.1130 mm, 58.2730 mm): Pad A8 of J1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadB5)). Severity: warning
+    @(75.1130 mm, 58.7730 mm): Pad B5 of J1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadB6)). Severity: warning
+    @(75.1130 mm, 57.7730 mm): Pad B6 of J1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadB7)). Severity: warning
+    @(75.1130 mm, 56.2730 mm): Pad B7 of J1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadB8)). Severity: warning
+    @(75.1130 mm, 55.2730 mm): Pad B8 of J1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U1-Pad5)). Severity: warning
+    @(84.1350 mm, 58.7075 mm): Pad 5 of U1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U1-Pad6)). Severity: warning
+    @(84.6350 mm, 58.7075 mm): Pad 6 of U1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U1-Pad8)). Severity: warning
+    @(85.6350 mm, 58.7075 mm): Pad 8 of U1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(SW1-Pad2)). Severity: warning
+    @(119.6775 mm, 55.6660 mm): Through hole pad 2 of SW1
+[net_conflict]: Pad missing net given by schematic (unconnected-(SW1-Pad5)). Severity: warning
+    @(117.1775 mm, 55.6660 mm): Through hole pad 5 of SW1
+[net_conflict]: Pad missing net given by schematic (/STM32/TX). Severity: warning
+    @(117.9930 mm, 92.1620 mm): Pad 1 of J9 on F.Cu
+[net_conflict]: Pad missing net given by schematic (/STM32/RX). Severity: warning
+    @(121.8030 mm, 92.1620 mm): Pad 8 of J9 on B.Cu
+[net_conflict]: Pad missing net given by schematic (/STM32/D0_SPI). Severity: warning
+    @(127.7620 mm, 73.7570 mm): Pad 3 of JP1 on F.Cu
+[net_conflict]: Pad missing net given by schematic (/STM32/D1_SPI). Severity: warning
+    @(127.7620 mm, 81.5640 mm): Pad 3 of JP2 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad2)). Severity: warning
+    @(122.9680 mm, 73.6260 mm): Pad 2 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad3)). Severity: warning
+    @(122.1680 mm, 73.6260 mm): Pad 3 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad13)). Severity: warning
+    @(116.7930 mm, 78.2010 mm): Pad 13 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad14)). Severity: warning
+    @(116.7930 mm, 79.0010 mm): Pad 14 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad18)). Severity: warning
+    @(118.9680 mm, 81.9760 mm): Pad 18 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad20)). Severity: warning
+    @(120.5680 mm, 81.9760 mm): Pad 20 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad26)). Severity: warning
+    @(125.1430 mm, 79.8010 mm): Pad 26 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad28)). Severity: warning
+    @(125.1430 mm, 78.2010 mm): Pad 28 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad29)). Severity: warning
+    @(125.1430 mm, 77.4010 mm): Pad 29 of U5 on F.Cu
+[net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad32)). Severity: warning
+    @(125.1430 mm, 75.0010 mm): Pad 32 of U5 on F.Cu
+[extra_footprint]: Extra footprint Severity: warning
+    @(71.3465 mm, 81.0585 mm): Footprint U3
+[extra_footprint]: Extra footprint Severity: warning
+    @(77.1885 mm, 78.2645 mm): Footprint R9
+[extra_footprint]: Extra footprint Severity: warning
+    @(77.4095 mm, 81.1085 mm): Footprint R8
+[extra_footprint]: Extra footprint Severity: warning
+    @(79.7285 mm, 75.5975 mm): Footprint R7
+[extra_footprint]: Extra footprint Severity: warning
+    @(77.1885 mm, 75.5975 mm): Footprint Q1
+[extra_footprint]: Extra footprint Severity: warning
+    @(72.4895 mm, 75.9785 mm): Footprint L3
+[extra_footprint]: Extra footprint Severity: warning
+    @(74.1405 mm, 81.0585 mm): Footprint D2
+[extra_footprint]: Extra footprint Severity: warning
+    @(75.8855 mm, 81.0955 mm): Footprint C11
+[extra_footprint]: Extra footprint Severity: warning
+    @(78.9665 mm, 81.0585 mm): Footprint C10
+
+** End of Report **
