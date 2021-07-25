@@ -1,0 +1,10 @@
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-F_Cu.gbr" created.
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-B_Cu.gbr" created.
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-F_Paste.gbr" created.
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-B_Paste.gbr" created.
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-F_Silkscreen.gbr" created.
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-B_Silkscreen.gbr" created.
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-F_Mask.gbr" created.
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-B_Mask.gbr" created.
+Plot file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-Edge_Cuts.gbr" created.
+Create Gerber job file "/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/subModules/DC_DC/gerbers/DC_DC-job.gbrjob"
