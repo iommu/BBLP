@@ -1,5 +1,5 @@
 ** Drc report for /home/iommu/Desktop/ECTE457/BBLP/Schematics/SubCircuits/SubCircuits.kicad_pcb **
-** Created on 2021-05-03 13:39:53 **
+** Created on 2021-05-03 15:06:45 **
 
 ** Found 13 DRC violations **
 [clearance]: Clearance violation (netclass 'Default' clearance 0.2000 mm; actual 0.1270 mm) Severity: error (excluded)
@@ -38,27 +38,33 @@
 [drill_out_of_range]: Drill out of range (board setup constraints min width 0.3000 mm; actual 0.2000 mm) Severity: error (excluded)
     @(127.6175 mm, 60.0710 mm): Through hole pad 11 of U2
 
-** Found 6 unconnected pads **
-[unconnected_items]: Missing connection between items Severity: error
-    @(74.1980 mm, 61.3430 mm): Through hole pad S1 of J1
-    @(73.0140 mm, 69.4950 mm): Track [GND] on F.Cu, length 5.0151 mm
+** Found 8 unconnected pads **
 [unconnected_items]: Missing connection between items Severity: error
     @(128.4405 mm, 63.3730 mm): Pad 2 of C7 on F.Cu
     @(121.2850 mm, 70.2180 mm): Track [GND] on F.Cu, length 1.5240 mm
 [unconnected_items]: Missing connection between items Severity: error
-    @(75.2155 mm, 94.2325 mm): Track [GND] on B.Cu, length 23.5890 mm
-    @(72.3465 mm, 82.3420 mm): Track [GND] on F.Cu, length 1.7175 mm
+    @(97.0160 mm, 83.9890 mm): Track [GND] on F.Cu, length 4.9230 mm
+    @(98.8045 mm, 94.2325 mm): Track [GND] on B.Cu, length 1.6186 mm
 [unconnected_items]: Missing connection between items Severity: error
-    @(129.8375 mm, 62.3570 mm): Via [+3V3] on F.Cu - B.Cu
+    @(102.6160 mm, 83.3120 mm): Through hole pad 3 of J5
+    @(112.5220 mm, 77.5970 mm): Track [GND] on B.Cu, length 3.5638 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(87.4270 mm, 76.9620 mm): Track [GND] on F.Cu, length 3.5355 mm
+    @(97.0160 mm, 83.9890 mm): Track [GND] on F.Cu, length 4.9230 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(95.5160 mm, 82.8890 mm): Track [+3V3] on F.Cu, length 6.5860 mm
+    @(79.3740 mm, 79.3750 mm): Track [+3V3] on B.Cu, length 6.7320 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(98.7090 mm, 92.8670 mm): Track [+3V3] on B.Cu, length 22.1280 mm
+    @(95.5160 mm, 82.8890 mm): Track [+3V3] on F.Cu, length 6.5860 mm
+[unconnected_items]: Missing connection between items Severity: error
+    @(129.8375 mm, 62.3570 mm): Track [+3V3] on B.Cu, length 3.9370 mm
     @(122.6960 mm, 71.8810 mm): Track [+3V3] on F.Cu, length 0.1598 mm
 [unconnected_items]: Missing connection between items Severity: error
-    @(78.9665 mm, 77.3255 mm): Track [+3V3] on F.Cu, length 2.9580 mm
-    @(77.8210 mm, 94.1070 mm): Track [+3V3] on F.Cu, length 1.7536 mm
-[unconnected_items]: Missing connection between items Severity: error
-    @(119.2630 mm, 92.1620 mm): Track [+3V3] on B.Cu, length 3.0180 mm
-    @(101.2190 mm, 94.1070 mm): Track [+3V3] on F.Cu, length 1.2700 mm
+    @(102.6160 mm, 78.2320 mm): Through hole pad 1 of J5
+    @(121.1580 mm, 82.1690 mm): Track [+3V3] on B.Cu, length 2.6941 mm
 
-** Found 36 Footprint errors **
+** Found 28 Footprint errors **
 [net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadA5)). Severity: warning
     @(75.1130 mm, 55.7730 mm): Pad A5 of J1 on F.Cu
 [net_conflict]: Pad missing net given by schematic (unconnected-(J1-PadA6)). Severity: warning
@@ -85,6 +91,8 @@
     @(119.6775 mm, 55.6660 mm): Through hole pad 2 of SW1
 [net_conflict]: Pad missing net given by schematic (unconnected-(SW1-Pad5)). Severity: warning
     @(117.1775 mm, 55.6660 mm): Through hole pad 5 of SW1
+[net_conflict]: Pad missing net given by schematic (unconnected-(D3-Pad2)). Severity: warning
+    @(95.5160 mm, 83.9890 mm): Pad 2 of D3 on F.Cu
 [net_conflict]: Pad missing net given by schematic (/STM32/TX). Severity: warning
     @(117.9930 mm, 92.1620 mm): Pad 1 of J9 on F.Cu
 [net_conflict]: Pad missing net given by schematic (/STM32/RX). Severity: warning
@@ -113,23 +121,5 @@
     @(125.1430 mm, 77.4010 mm): Pad 29 of U5 on F.Cu
 [net_conflict]: Pad missing net given by schematic (unconnected-(U5-Pad32)). Severity: warning
     @(125.1430 mm, 75.0010 mm): Pad 32 of U5 on F.Cu
-[extra_footprint]: Extra footprint Severity: warning
-    @(71.3465 mm, 81.0585 mm): Footprint U3
-[extra_footprint]: Extra footprint Severity: warning
-    @(77.1885 mm, 78.2645 mm): Footprint R9
-[extra_footprint]: Extra footprint Severity: warning
-    @(77.4095 mm, 81.1085 mm): Footprint R8
-[extra_footprint]: Extra footprint Severity: warning
-    @(79.7285 mm, 75.5975 mm): Footprint R7
-[extra_footprint]: Extra footprint Severity: warning
-    @(77.1885 mm, 75.5975 mm): Footprint Q1
-[extra_footprint]: Extra footprint Severity: warning
-    @(72.4895 mm, 75.9785 mm): Footprint L3
-[extra_footprint]: Extra footprint Severity: warning
-    @(74.1405 mm, 81.0585 mm): Footprint D2
-[extra_footprint]: Extra footprint Severity: warning
-    @(75.8855 mm, 81.0955 mm): Footprint C11
-[extra_footprint]: Extra footprint Severity: warning
-    @(78.9665 mm, 81.0585 mm): Footprint C10
 
 ** End of Report **

@@ -48,7 +48,13 @@
           "min_clearance": 0.0
         }
       },
-      "diff_pair_dimensions": [],
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
+      ],
       "drc_exclusions": [
         "clearance|121035000|71993000|b6891677-f732-4608-a388-5ae4381f5fc9|4c46fa03-2e40-4470-a7cc-cb74ae8a0de4",
         "clearance|127462000|75457000|a138b458-d630-4cfd-b4dc-0a802ca21446|54443052-11db-4a52-a116-d183b9ea9917",
@@ -123,8 +129,16 @@
         "solder_mask_clearance": 0.0,
         "solder_mask_min_width": 0.0
       },
-      "track_widths": [],
-      "via_dimensions": [],
+      "track_widths": [
+        0.0,
+        1.0
+      ],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        }
+      ],
       "zones_allow_external_fillets": false,
       "zones_use_no_outline": true
     },
@@ -311,6 +325,7 @@
     ],
     "rule_severities": {
       "bus_definition_conflict": "error",
+      "bus_entry_needed": "error",
       "bus_label_syntax": "error",
       "bus_to_bus_conflict": "error",
       "bus_to_net_conflict": "error",
@@ -367,7 +382,7 @@
       }
     ],
     "meta": {
-      "version": 0
+      "version": 1
     },
     "net_colors": null
   },
@@ -383,6 +398,7 @@
     "page_layout_descr_file": ""
   },
   "schematic": {
+    "annotate_start_num": 0,
     "drawing": {
       "default_bus_thickness": 12.0,
       "default_junction_size": 40.0,
@@ -406,10 +422,13 @@
     },
     "net_format_name": "",
     "ngspice": {
+      "fix_include_paths": true,
+      "fix_passive_vals": false,
       "meta": {
         "version": 0
       },
-      "model_mode": 0
+      "model_mode": 0,
+      "workbook_filename": ""
     },
     "page_layout_descr_file": "",
     "plot_directory": "",
@@ -420,7 +439,7 @@
   },
   "sheets": [
     [
-      "881dfa9b-c9ea-4319-a14f-5c7ca1d25c28",
+      "ee01242e-ca8e-43f5-a20e-1096639b0e8b",
       ""
     ],
     [
@@ -445,7 +464,7 @@
     ],
     [
       "b70baf3a-7267-4281-a2b4-579d49543506",
-      "STM33"
+      "STM33 Programmer"
     ]
   ],
   "text_variables": {}
