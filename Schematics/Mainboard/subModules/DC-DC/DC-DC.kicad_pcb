@@ -168,7 +168,7 @@
 
   (footprint "Connector_PinSocket_2.54mm:PinSocket_1x06_P2.54mm_Vertical" (layer "F.Cu")
     (tedit 5A19A430) (tstamp 1de949a4-b3f2-4f77-a249-8841008d24fa)
-    (at 109.245 56.794)
+    (at 109.474 56.794)
     (descr "Through hole straight socket strip, 1x06, 2.54mm pitch, single row (from Kicad 4.0.7), script generated")
     (tags "Through hole socket strip THT 1x06 2.54mm single row")
     (property "Sheetfile" "DC-DC.kicad_sch")
