@@ -378,7 +378,7 @@
     (property "Sheetname" "")
     (path "/3961b61e-5c45-46d3-9d8f-7ad4de7c1555")
     (attr through_hole)
-    (fp_text reference "J2" (at -2.311 -0.65) (layer "F.SilkS")
+    (fp_text reference "J2" (at 2.769 -0.904) (layer "F.SilkS")
       (effects (font (size 1 1) (thickness 0.15)))
       (tstamp bab193bf-3611-4be8-bdb9-bd1a83b19259)
     )
