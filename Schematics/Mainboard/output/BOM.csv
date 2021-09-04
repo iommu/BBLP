@@ -1,0 +1,68 @@
+Comment,Designator,Footprint,LCSC Part #
+"0u1 Unpolarized capacitor, small symbol","C1,C3,C6",C_0603_1608Metric,C14663
+"10u Unpolarized capacitor, small symbol","C2,C4,C5,C7,C8,C9,C10",C_0603_1608Metric,C19702
+"SHORT LED Light emitting diode, small symbol",D1,LED_1206_3216Metric_Castellated,C2286
+"SS24 Diode, small symbol",D2,D_SMA,C181203
+"Red Light emitting diode, small symbol",D3,LED_1206_3216Metric_Castellated,C2286
+"FM-B2020RGBA-HG RGB LED, blue/red/green/anode",D4,LED_BL-FL7680RGB,C108793
+"Gre Light emitting diode, small symbol",D5,LED_1206_3216Metric_Castellated,C434420
+"Yel Light emitting diode, small symbol",D6,LED_1206_3216Metric_Castellated,C205450
+MountingHole Mounting Hole without connection,"H1,H2,H3,H4",MountingHole_3.2mm_M3,
+USB-C USB 2.0-only Type-C Receptacle connector,J1,USB_C_Receptacle_HRO_TYPE-C-31-M-12,C2835315
+"Pololu DC-DC Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J2,PinSocket_1x04_P2.54mm_Vertical,
+"USB Alt Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J3,PinSocket_1x04_P2.54mm_Vertical,
+"NFC Conn Generic connector, single row, 01x08, script generated (kicad-library-utils/schlib/autogen/connector/)",J4,PinSocket_1x08_P2.54mm_Vertical,
+"Prot in Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)",J5,PinSocket_1x06_P2.54mm_Vertical,
+"Prot out Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)",J6,PinSocket_1x06_P2.54mm_Vertical,
+"Power rail Generic connector, double row, 02x36, odd/even pin numbering scheme (row 1 odd numbers, row 2 even numbers), script generated (kicad-library-utils/schlib/autogen/connector/)","J7,J8",PinSocket_2x36_P2.54mm_Vertical,
+"Batt alt Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",J9,PinSocket_1x02_P2.54mm_Vertical,
+"CHG in Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)",J10,PinSocket_1x06_P2.54mm_Vertical,
+"Batt Generic connector, single row, 01x02, script generated (kicad-library-utils/schlib/autogen/connector/)",J11,JST_PH_S2B-PH-SM4-TB_1x02-1MP_P2.00mm_Horizontal,
+"CHG out Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)",J12,PinSocket_1x06_P2.54mm_Vertical,
+"DC-DC in Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)",J13,PinSocket_1x06_P2.54mm_Vertical,
+"DC-DC out Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)",J14,PinSocket_1x06_P2.54mm_Vertical,
+"OLED Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J16,PinSocket_1x04_P2.54mm_Vertical,
+"I0 Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)",J20,PinSocket_1x01_P2.54mm_Vertical,
+"I1 Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)",J23,PinSocket_1x01_P2.54mm_Vertical,
+"I2C OLED 0 Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J24,PinSocket_1x04_P2.54mm_Vertical,
+"I2C OLED 1 Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J25,PinSocket_1x04_P2.54mm_Vertical,
+"I2C OLED 2 Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J26,PinSocket_1x04_P2.54mm_Vertical,
+"I2C OLED 3 Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J27,PinSocket_1x04_P2.54mm_Vertical,
+"I2C OLED 4 Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J28,PinSocket_1x04_P2.54mm_Vertical,
+"I2C OLED 5 Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J29,PinSocket_1x04_P2.54mm_Vertical,
+"I2C OLED 6 Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J30,PinSocket_1x04_P2.54mm_Vertical,
+"I2C OLED 7 Generic connector, single row, 01x04, script generated (kicad-library-utils/schlib/autogen/connector/)",J31,PinSocket_1x04_P2.54mm_Vertical,
+"I2 Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)",J32,PinSocket_1x01_P2.54mm_Vertical,
+"I3 Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)",J33,PinSocket_1x01_P2.54mm_Vertical,
+"O0 Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)",J34,PinSocket_1x01_P2.54mm_Vertical,
+"O1 Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)",J35,PinSocket_1x01_P2.54mm_Vertical,
+"O2 Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)",J36,PinSocket_1x01_P2.54mm_Vertical,
+"O3 Generic connector, single row, 01x01, script generated (kicad-library-utils/schlib/autogen/connector/)",J37,PinSocket_1x01_P2.54mm_Vertical,
+"Del in Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)",J44,PinSocket_1x06_P2.54mm_Vertical,
+"Del out Generic connector, single row, 01x06, script generated (kicad-library-utils/schlib/autogen/connector/)",J45,PinSocket_1x06_P2.54mm_Vertical,
+"3.3V Jumper Jumper, normally closed",JP1,SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm,
+"GND Jumper Jumper, normally closed",JP2,SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm,
+"Jumper Jumper, normally closed","JP3,JP4",SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm,
+"SHDN Jumper, normally open, small symbol",JP5,SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm,
+"DC_DC Jumper, normally closed",JP6,SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm,
+"AO3401A -4.0A Id, -30V Vds, P-Channel MOSFET, SOT-23",Q1,SOT-23,C347476
+"DTC143T Digital NPN Transistor, 4k7/NONE, SOT-23","Q2,Q3",SOT-323_SC-70,C122986
+"10k Resistor, small symbol","R1,R2,R3,R12,R14,R15,R25,R26",R_0603_1608Metric,C25804
+"65 Resistor, small symbol","R4,R8",R_0603_1608Metric,C23032
+"100k Resistor, small symbol",R5,R_0603_1608Metric,C25803
+"0 Resistor, small symbol","R6,R7",R_1206_3216Metric,C17888
+"15 Resistor, small symbol","R9,R10",R_0603_1608Metric,C22810
+"47k Resistor, small symbol","R11,R13,R16,R17,R18,R19",R_0603_1608Metric,C25819
+"1k5 Resistor, small symbol","R20,R21,R22",R_0603_1608Metric,C22843
+"1k Resistor, small symbol","R23,R24",R_0603_1608Metric,C21190
+"5k1 Resistor, small symbol","R31,R32",R_0603_1608Metric,C23186
+"RESET Push button switch, generic, two pins",SW1,SW_Push_1P1T_NO_6x6mm_H9.5mm,C778181
+"SW_SPDT Switch, single pole double throw",SW2,SW-TH_SS-12D11G5,C692484
+"Rot Rotary encoder, dual channel, incremental quadrate outputs, with switch","SW3,SW4",RotaryEncoder_Alps_EC11E-Switch_Vertical_H20mm,
+3.3V Wire TP test point,TP1,TestPoint_Keystone_5015_Micro-Minature,
+GND Wire TP test point,TP2,TestPoint_Keystone_5015_Micro-Minature,
+"ESP32-WROOM-32 RF Module, ESP32-D0WDQ6 SoC, Wi-Fi 802.11b/g/n, Bluetooth, BLE, 32-bit, 2.7-3.6V, onboard antenna, SMD",U1,ESP32-WROOM-32,C473012
+"TCA9548APWR Low voltage 8-channel I2C switch with reset, TSSOP-24",U2,TSSOP-24_4.4x7.8mm_P0.65mm,C130026
+"CH340B USB serial converter, UART, SOIC-16",U3,SOIC-16_3.9x9.9mm_P1.27mm,C81010
+"PCF8574TS 8 Bit Port/Expander to I2C Bus, SSOP-20",U4,SSOP-20_4.4x6.5mm_P0.65mm,C57790
+MCP73833 ,U5,MSOP-10_3x3mm_P0.5mm,C511281

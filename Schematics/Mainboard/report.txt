@@ -1,0 +1,6 @@
+Info: Front (top side) placement file: '/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/output/Mainboard-top-pos.csv'.
+Info: Component count: 38.
+Info: Back (bottom side) placement file: '/home/iommu/Desktop/ECTE457/BBLP/Schematics/Mainboard/output/Mainboard-bottom-pos.csv'.
+Info: Component count: 63.
+Info: Full component count: 101.
+Info: File generation successful.
