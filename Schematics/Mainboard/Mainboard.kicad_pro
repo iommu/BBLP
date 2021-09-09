@@ -401,7 +401,7 @@
       "netlist": "",
       "specctra_dsn": "",
       "step": "output/Mainboard.step",
-      "vrml": ""
+      "vrml": "output/3d/Mainboard.wrl"
     },
     "page_layout_descr_file": ""
   },
