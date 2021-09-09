@@ -1,6 +1,7 @@
 Comment,Designator,Footprint,LCSC Part #
 "0u1 Unpolarized capacitor, small symbol","C1,C3,C6",C_0603_1608Metric,C14663
-"10u Unpolarized capacitor, small symbol","C2,C4,C5,C7,C8,C9,C10",C_0603_1608Metric,C19702
+"10u Unpolarized capacitor, small symbol","C2,C4,C5,C9,C10",C_0603_1608Metric,C19702
+"1u Unpolarized capacitor, small symbol","C7,C8",C_0603_1608Metric,C15849
 "SHORT LED Light emitting diode, small symbol",D1,LED_1206_3216Metric_Castellated,C2286
 "SS24 Diode, small symbol",D2,D_SMA,C181203
 "Red Light emitting diode, small symbol",D3,LED_1206_3216Metric_Castellated,C2286
@@ -47,12 +48,12 @@ USB-C USB 2.0-only Type-C Receptacle connector,J1,USB_C_Receptacle_HRO_TYPE-C-31
 "DC_DC Jumper, normally closed",JP6,SolderJumper-2_P1.3mm_Open_Pad1.0x1.5mm,
 "AO3401A -4.0A Id, -30V Vds, P-Channel MOSFET, SOT-23",Q1,SOT-23,C347476
 "DTC143T Digital NPN Transistor, 4k7/NONE, SOT-23","Q2,Q3",SOT-323_SC-70,C122986
-"10k Resistor, small symbol","R1,R2,R3,R12,R14,R15,R25,R26",R_0603_1608Metric,C25804
+"10k Resistor, small symbol","R1,R2,R3,R12,R14,R15,R18,R19,R25,R26,R27,R28",R_0603_1608Metric,C25804
 "65 Resistor, small symbol","R4,R8",R_0603_1608Metric,C23032
 "100k Resistor, small symbol",R5,R_0603_1608Metric,C25803
 "0 Resistor, small symbol","R6,R7",R_1206_3216Metric,C17888
 "15 Resistor, small symbol","R9,R10",R_0603_1608Metric,C22810
-"47k Resistor, small symbol","R11,R13,R16,R17,R18,R19",R_0603_1608Metric,C25819
+"47k Resistor, small symbol","R11,R13,R16,R17",R_0603_1608Metric,C25819
 "1k5 Resistor, small symbol","R20,R21,R22",R_0603_1608Metric,C22843
 "1k Resistor, small symbol","R23,R24",R_0603_1608Metric,C21190
 "5k1 Resistor, small symbol","R31,R32",R_0603_1608Metric,C23186
