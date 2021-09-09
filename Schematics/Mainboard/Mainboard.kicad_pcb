@@ -1,4 +1,4 @@
-(kicad_pcb (version 20210722) (generator pcbnew)
+(kicad_pcb (version 20210824) (generator pcbnew)
 
   (general
     (thickness 1.6)
@@ -748,7 +748,7 @@
     )
     (fp_circle (center 0 0) (end 3.2 0) (layer "Cmts.User") (width 0.15) (fill none) (tstamp fa3b0df9-b862-4275-a76d-c40254eafb5b))
     (fp_circle (center 0 0) (end 3.45 0) (layer "F.CrtYd") (width 0.05) (fill none) (tstamp bb6e82c4-376e-4b67-a03f-fbb10eb517df))
-    (pad "1" np_thru_hole circle locked (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask) (tstamp 04b9fdb4-b3d3-4d8b-8e19-17ecaae82e4a))
+    (pad "" np_thru_hole circle locked (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask) (tstamp 04b9fdb4-b3d3-4d8b-8e19-17ecaae82e4a))
   )
 
   (footprint "MountingHole:MountingHole_3.2mm_M3" (layer "F.Cu")
@@ -774,7 +774,7 @@
     )
     (fp_circle (center 0 0) (end 3.2 0) (layer "Cmts.User") (width 0.15) (fill none) (tstamp 846064a6-5805-4f9b-a069-dee61fbf2cb8))
     (fp_circle (center 0 0) (end 3.45 0) (layer "F.CrtYd") (width 0.05) (fill none) (tstamp c7f26523-b369-481b-8793-eb2ac6c2ddfa))
-    (pad "1" np_thru_hole circle locked (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask) (tstamp b8eaa909-9079-4c75-9ada-a7e7382d1247))
+    (pad "" np_thru_hole circle locked (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask) (tstamp b8eaa909-9079-4c75-9ada-a7e7382d1247))
   )
 
   (footprint "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical" (layer "F.Cu")
@@ -1361,7 +1361,7 @@
     )
     (fp_circle (center 0 0) (end 3.2 0) (layer "Cmts.User") (width 0.15) (fill none) (tstamp 6cb1badb-aa69-481c-85c2-f3ac1a0a0dce))
     (fp_circle (center 0 0) (end 3.45 0) (layer "F.CrtYd") (width 0.05) (fill none) (tstamp e550b2a9-2db1-41db-b8a8-45ee6205288e))
-    (pad "1" np_thru_hole circle locked (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask) (tstamp 8f31b5a4-baa1-45d6-b54d-5aca5a03d9d6))
+    (pad "" np_thru_hole circle locked (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask) (tstamp 8f31b5a4-baa1-45d6-b54d-5aca5a03d9d6))
   )
 
   (footprint "Connector_PinSocket_2.54mm:PinSocket_1x01_P2.54mm_Vertical" (layer "F.Cu")
@@ -2218,7 +2218,7 @@
     )
     (fp_circle (center 0 0) (end 3.2 0) (layer "Cmts.User") (width 0.15) (fill none) (tstamp a8e39b9c-ee40-449f-b407-ec33c11e0ef1))
     (fp_circle (center 0 0) (end 3.45 0) (layer "F.CrtYd") (width 0.05) (fill none) (tstamp 64236c1c-c3d7-434a-a8d5-36c52d447f1a))
-    (pad "1" np_thru_hole circle locked (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask) (tstamp 7ad1e81f-a7ca-436c-8c67-17571ff3817a))
+    (pad "" np_thru_hole circle locked (at 0 0) (size 3.2 3.2) (drill 3.2) (layers *.Cu *.Mask) (tstamp 7ad1e81f-a7ca-436c-8c67-17571ff3817a))
   )
 
   (footprint "Connector_PinSocket_2.54mm:PinSocket_1x04_P2.54mm_Vertical" (layer "F.Cu")

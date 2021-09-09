@@ -397,10 +397,10 @@
   "pcbnew": {
     "last_paths": {
       "gencad": "",
-      "idf": "",
+      "idf": "Mainboard.emn",
       "netlist": "",
       "specctra_dsn": "",
-      "step": "",
+      "step": "output/Mainboard.step",
       "vrml": ""
     },
     "page_layout_descr_file": ""
