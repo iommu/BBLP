@@ -35,9 +35,10 @@ private:
 
 class RGBLED {
 public:
-RGBLED();
-~RGBLED();
-void setRGB(uint8_t r, uint8_t g, uint8_t b);
+  RGBLED();
+  ~RGBLED();
+  void setRGB(uint8_t r, uint8_t g, uint8_t b);
+
 private:
 };
 
@@ -56,18 +57,6 @@ private:
   void (*callback_b)(void); /* button press callback */
 };
 
-class Interface {
-public:
-  Interface();
-  ~Interface();
-  void setQuestions(DynamicJsonDocument j_questions);
-
-private:
-  RGBLED rgb_led;
-  Encoder encoders[2];
-  Adafruit_SSD1306 display;
-};
-
 class NFC {
 public:
   NFC();
@@ -76,4 +65,16 @@ public:
   uint32_t getID(); // Gets transmitted ID from NFC
 private:
   Adafruit_PN532 nfc;
+};
+
+class Interface {
+public:
+  Interface();
+  ~Interface();
+
+private:
+  DynamicJsonDocument j_questions;
+  RGBLED rgb_led;
+  Encoder encoders[2];
+  Adafruit_SSD1306 oled;
 };
