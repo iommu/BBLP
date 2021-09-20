@@ -1,7 +1,5 @@
 #include "network.hpp"
 
-#define server_uri "http://"
-
 NetworkHandler::NetworkHandler() {
   // Shutdown wifi to save power
   disconn();
@@ -17,13 +15,13 @@ String NetworkHandler::getQuestions() {
 
   if (client.GET()) { // if response code > 0
     Serial.println("Got JSON from server");
-    ret = http.getString();
+    ret = client.getString();
   } else {
     Serial.println("Err getting JSON from server");
     Serial.println("Server URI = " + server_uri);
   }
 
-  http.end();
+  client.end();
   //
   disconn();
   return ret;
@@ -35,7 +33,7 @@ void NetworkHandler::uploadAnswers(String answer) {
   HTTPClient client;
 
   client.begin(server_uri + "/push");
-  client.POST(answer_string);
+  client.POST(answer);
 
   client.end();
   //

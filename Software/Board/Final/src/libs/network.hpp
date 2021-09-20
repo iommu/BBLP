@@ -1,21 +1,21 @@
-#include <Arduino.h>
-#include <WiFi.h>
-#include <HttpClient.h>
-#include <ArduinoJson.h>
-#include <esp_wifi.h>
 #include "driver/adc.h"
+#include <Arduino.h>
+#include <ArduinoJson.h>
+#include <HTTPClient.h>
+#include <WiFi.h>
+#include <esp_wifi.h>
 
 class NetworkHandler {
 public:
-    NetworkHandler();
-    ~NetworkHandler();
-    String getQuestions();
-    void uploadAnswers(String answers);
+  NetworkHandler();
+  String getQuestions();
+  void uploadAnswers(String answers);
 
 private:
-    void connect();
-    void disconn();
+  void connect();
+  void disconn();
 
-    String ssid = "ssid";
-    String pass = "pass";
+  String server_uri = "http://";
+  String ssid = "ssid";
+  String pass = "pass";
 };
