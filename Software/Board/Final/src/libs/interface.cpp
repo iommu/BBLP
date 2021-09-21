@@ -16,11 +16,26 @@ void MUXOLED::selOLED(uint8_t sel) {
 
 // MUXPins
 
-MUXPins::MUXPins() : pcf(0x20) {
-  pcf.begin(16, 17); // Start i2c conn;
+MUXPins::MUXPins() : pcf(0x20) /* set I2C addr */ {
+  pcf.begin(16, 17); // Start I2C conn
 }
 
-MUXPins::~MUXPins() {}
+void MUXPins::writePins(bool pins[4]) {
+  pcf.write(0, pins[0]);
+  pcf.write(1, pins[1]);
+  pcf.write(2, pins[2]);
+  pcf.write(3, pins[3]);
+}
+
+bool *MUXPins::readPins() {
+  bool pins[4];
+  pins[0] = pcf.read(4);
+  pins[1] = pcf.read(5);
+  pins[2] = pcf.read(6);
+  pins[3] = pcf.read(7);
+  return pins;
+}
+
 
 // RGBLED
 

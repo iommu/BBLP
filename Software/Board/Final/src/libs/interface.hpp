@@ -30,7 +30,6 @@ private:
 class MUXPins {
 public:
   MUXPins();
-  ~MUXPins();
   void writePins(bool pins[4]);
   bool *readPins();
 
