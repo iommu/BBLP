@@ -6,7 +6,11 @@
 #include <Adafruit_PN532.h>
 #include <Adafruit_SSD1306.h>
 #include <ArduinoJson.h>
+#include <ESP32Encoder.h>
+#include <PCF8574.h>
 #include <Vector.h>
+
+#include "network.hpp"
 
 class MUXOLED {
 public:
@@ -25,7 +29,13 @@ private:
 
 class MUXPins {
 public:
+  MUXPins();
+  ~MUXPins();
+  void writePins(bool pins[4]);
+  bool *readPins();
+
 private:
+  PCF8574 pcf;
 };
 
 class IOInterface : public MUXOLED, public MUXPins {
@@ -35,32 +45,15 @@ private:
 
 class RGBLED {
 public:
-  RGBLED();
-  ~RGBLED();
+  RGBLED(uint8_t r, uint8_t g, uint8_t b);
   void setRGB(uint8_t r, uint8_t g, uint8_t b);
 
 private:
 };
 
-class Encoder {
-public:
-  Encoder();
-  ~Encoder();
-
-  void setCallbackTurn();
-  void setCallbackSwitch();
-
-private:
-  int rotation = 0;
-
-  void (*callback_u)(void); /* rotation update callback */
-  void (*callback_b)(void); /* button press callback */
-};
-
 class NFC {
 public:
   NFC();
-  ~NFC();
 
   uint32_t getID(); // Gets transmitted ID from NFC
 private:
@@ -70,11 +63,22 @@ private:
 class Interface {
 public:
   Interface();
-  ~Interface();
 
 private:
+  void updateDisplay(uint8_t question_num);
+
+  RGBLED ind_led;
+  NetworkHandler network;
   DynamicJsonDocument j_questions;
   RGBLED rgb_led;
-  Encoder encoders[2];
+  ESP32Encoder encoder_q; // encoder_t;
   Adafruit_SSD1306 oled;
+  //
+  // void IRAM_ATTR updateTime(); // Updates small clock top right
+  // hw_timer_t * timer = NULL;
+  int8_t answer_time;
+  uint8_t num_questions;
+
+  //
+  uint32_t student_id;
 };
