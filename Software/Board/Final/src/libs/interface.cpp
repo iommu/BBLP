@@ -14,6 +14,15 @@ MUXOLED::MUXOLED() {
       for (;;)
         ; // Don't proceed, loop forever
     }
+    // Set screen upside down if one of the lucky few
+    switch (index) {
+    case 4:
+    case 5:
+    case 6:
+    case 7:
+      display[index].setRotation(2);
+    }
+
     // Clear OLEDs
     display[index].clearDisplay();
     display[index].display();
@@ -35,7 +44,10 @@ MUXOLED::MUXOLED() {
 }
 
 void MUXOLED::draw8(int shift) {
-  pixel_shift += shift;
+  // capped += , make sure never smaller than 0
+  pixel_shift = ((int)((int)pixel_shift + shift) < 0) ? 0 : pixel_shift + shift;
+
+  Serial.println(pixel_shift);
   for (uint8_t index = 0; index < 8; index++) {
     draw(index);
   }
@@ -57,7 +69,7 @@ void MUXOLED::draw(uint8_t sel) {
                      ? 0
                      : 60; // true = high = 0, false = low = 60
 
-    uint x_loc = pixel_shift % PIXELS_PER_BIT + index * PIXELS_PER_BIT;
+    uint x_loc = -(pixel_shift % PIXELS_PER_BIT) + index * PIXELS_PER_BIT;
 
     display[sel].drawLine(x_loc, y_loc, x_loc + PIXELS_PER_BIT, y_loc,
                           SSD1306_WHITE); // Draw hor line
@@ -100,6 +112,34 @@ bool *MUXPins::readPins() {
   pins[3] = pcf.read(7);
   return pins;
 }
+
+// IOInterface
+
+bool t_state = false;
+void tBtnPress() { t_state = true; }
+
+IOInterface::IOInterface() : oleds() {
+  encoder_t.attachHalfQuad(32, 34); // Time
+  encoder_t.clearCount();           // Clear value
+
+  pinMode(33, INPUT);
+  attachInterrupt(33, tBtnPress, FALLING); // Time
+
+  bool auto_shift = 0;
+  int count_shift = 0, old_count = 0;
+  while (1) {
+    if (t_state) {
+      auto_shift = !auto_shift;
+      t_state = false;
+    }
+
+    count_shift = encoder_t.getCount() - old_count;
+    old_count = encoder_t.getCount();
+    oleds.draw8(count_shift * 20 + auto_shift * 4);
+  }
+}
+
+void interfaceFunc(void *parameter) { IOInterface interface = IOInterface(); }
 
 // RGBLED
 
@@ -158,11 +198,9 @@ uint32_t NFC::getID() {
 
 // Interface
 
-bool q_state = false, t_state = false;
+bool q_state = false;
 
 void qBtnPress() { q_state = true; }
-
-void tBtnPress() { t_state = true; }
 
 Interface::Interface()
     : ind_led(), network(), j_questions(2048),
@@ -173,7 +211,6 @@ Interface::Interface()
     for (;;)
       ; // Don't proceed, loop forever
   }
-  MUXOLED a = MUXOLED();
 
   { // Show welcome screen
     Serial.println("Showing welcome screen");
@@ -255,13 +292,10 @@ Interface::Interface()
     // Attach encoders to ESP32encoder class
     encoder_q.attachHalfQuad(25, 26); // Question
     encoder_q.clearCount();           // Clear value
-    // encoder_t.attachHalfQuad(32, 34); // Time
-    // encoder_t.clearCount();           // Clear value
+
     // Attach button handler
     pinMode(27, INPUT);
     attachInterrupt(27, qBtnPress, FALLING); // Question
-    // pinMode(33, INPUT);
-    // attachInterrupt(33, tBtnPress, FALLING); // Time
   }
 
   { // Start encoder UI, while loop because OOP callbacks just not worth it in C
@@ -271,7 +305,8 @@ Interface::Interface()
                                    // of non selected question
     uint8_t view_question = 0,
             sel_question = 0; // current view / current selected
-
+    MUXTask = NULL; // Set task null till it's used
+    
     while (1) {
       if (revert_time && revert_time < millis()) {
         revert_time = 0;
@@ -295,6 +330,21 @@ Interface::Interface()
         // Invert screen to show active
         oled.invertDisplay(true);
         oled.display();
+        // Start question
+        Serial.println("ehhh");
+        if (MUXTask != NULL) {
+          vTaskDelete(MUXTask);
+        }
+                Serial.println("ehhhggghhh");
+
+        xTaskCreatePinnedToCore(
+            interfaceFunc,   /* Function to implement the task */
+            "mux interface", /* Name of the task */
+            10000,           /* Stack size in words */
+            NULL,            /* Task input parameter */
+            0,               /* Priority of the task */
+            &MUXTask,        /* Task handle. */
+            0);              /* Core where the task should run */
       } else if (encoder_q.getCount() % num_questions != view_question) {
         if (running) {
           revert_time = millis() + 3000; // revert in 3 seconds past now

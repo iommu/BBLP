@@ -54,11 +54,12 @@ private:
 
 // IOInterface : MUX handler
 
-class IOInterface : public MUXOLED, public MUXPins {
+class IOInterface {
 public:
   IOInterface();
 
 private:
+  MUXOLED oleds;
   ESP32Encoder encoder_t;
 
 };
