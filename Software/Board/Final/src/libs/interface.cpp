@@ -1,11 +1,76 @@
 #include "interface.hpp"
 
+// MUXOLED : Octa OLED interface
+
 MUXOLED::MUXOLED() {
   Serial.println("Initializing MUX OLEDs");
   for (uint8_t index = 0; index < 8; index++) {
     display[index] =
         Adafruit_SSD1306(128 /*w*/, 64 /*h*/, &Wire, -1, 800000, 400000);
+    selOLED(index);
+    if (!display[index].begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
+      Serial.print(F("SSD1306 allocation failed For OLED : "));
+      Serial.println(index);
+      for (;;)
+        ; // Don't proceed, loop forever
+    }
+    // Clear OLEDs
+    display[index].clearDisplay();
+    display[index].display();
+
+    // Set storage array for waves_exp "Vector" clone
+    waves_exp[index].setStorage(storage_array[index]);
+    waves_exp[index].push_back(0);
+    waves_exp[index].push_back(1);
+    waves_exp[index].push_back(0);
+    waves_exp[index].push_back(1);
+    waves_exp[index].push_back(0);
+    waves_exp[index].push_back(1);
+    waves_exp[index].push_back(0);
+    waves_exp[index].push_back(1);
   }
+  time_start = millis(); // time drawing started
+  pixel_shift = (float)((millis() - time_start) / 1000) * BITS_PER_SECOND *
+                PIXELS_PER_BIT;
+}
+
+void MUXOLED::draw8(int shift) {
+  pixel_shift += shift;
+  for (uint8_t index = 0; index < 8; index++) {
+    draw(index);
+  }
+}
+
+void MUXOLED::draw(uint8_t sel) {
+  uint start_bit = pixel_shift / PIXELS_PER_BIT;    // First display bit
+  uint delta = ceil((float)(128) / PIXELS_PER_BIT); // Number of bits per frame
+
+  // Cap range
+  if (waves_exp[sel].size() <= start_bit + delta)
+    delta = waves_exp[sel].size() - start_bit;
+
+  // Change active I2C display
+  selOLED(sel);
+  display[sel].clearDisplay();
+  for (uint index = 0; index < delta; index++) {
+    uint y_loc = waves_exp[sel][start_bit + index]
+                     ? 0
+                     : 60; // true = high = 0, false = low = 60
+
+    uint x_loc = pixel_shift % PIXELS_PER_BIT + index * PIXELS_PER_BIT;
+
+    display[sel].drawLine(x_loc, y_loc, x_loc + PIXELS_PER_BIT, y_loc,
+                          SSD1306_WHITE); // Draw hor line
+
+    // If next bit is not same as current bit draw next bit
+    if (waves_exp[sel][start_bit + index] !=
+        waves_exp[sel][start_bit + index + 1]) {
+      display[sel].drawLine(x_loc + PIXELS_PER_BIT, 0, x_loc + PIXELS_PER_BIT,
+                            60,
+                            SSD1306_WHITE); // Draw hor line
+    }
+  }
+  display[sel].display();
 }
 
 void MUXOLED::selOLED(uint8_t sel) {
@@ -14,7 +79,7 @@ void MUXOLED::selOLED(uint8_t sel) {
   Wire.endTransmission();
 }
 
-// MUXPins
+// MUXPins : Octa IO expander (4 Input / 4 Output)
 
 MUXPins::MUXPins() : pcf(0x20) /* set I2C addr */ {
   pcf.begin(16, 17); // Start I2C conn
@@ -108,6 +173,7 @@ Interface::Interface()
     for (;;)
       ; // Don't proceed, loop forever
   }
+  MUXOLED a = MUXOLED();
 
   { // Show welcome screen
     Serial.println("Showing welcome screen");
