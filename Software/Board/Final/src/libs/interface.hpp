@@ -17,25 +17,6 @@
 #define PIXELS_PER_BIT 60 // How many pixels on a screen we use for one bit
 #define BITS_PER_SECOND 1 // How many new bits we display on a screen per second
 #define MAX_BITS 20       // Max number of bits per wave
-// MUXOLED : Octa OLED interface
-
-class MUXOLED {
-public:
-  MUXOLED();
-
-  void draw(uint8_t sel);
-  void draw8(int shift);
-private:
-  void selOLED(uint8_t sel);
-
-  unsigned long time_start; // Time we started this display
-  uint32_t pixel_shift;     // how many pixels we don't draw
-
-  bool storage_array[8][MAX_BITS];
-  Vector<bool> waves_exp[8]; // Expected waves
-
-  Adafruit_SSD1306 display[8];
-};
 
 // MUXPins : Octa IO expander (4 Input / 4 Output)
 
@@ -44,12 +25,37 @@ public:
   MUXPins();
 
   void writePins(bool pins[4]);
-  bool *readPins();
+  void readPins(bool pins[4]);
 
 private:
   Vector<bool> waves_rec[8]; // Recived waves
 
   PCF8574 pcf;
+};
+
+// MUXOLED : Octa OLED interface
+
+class MUXOLED: public MUXPins {
+public:
+  MUXOLED();
+
+  void draw(uint8_t sel, uint start_bit, uint delta);
+  void draw8(int shift);
+
+private:
+  void selOLED(uint8_t sel);
+
+  uint8_t mix[8] = {3, 2, 1, 0, 4, 5, 6, 7}; // Switches OLED names with mux addr
+
+  uint8_t recorded_index = 0; 
+  uint64_t recorded[4] = {0}; // one bit per PIXELS_PER_BIT/12 pixels 
+
+  uint16_t pixel_shift, old_shift;     // how many pixels we don't draw
+
+  bool storage_array[8][MAX_BITS] = {{false}};
+  Vector<bool> waves_exp[8]; // Expected waves
+
+  Adafruit_SSD1306 display[8];
 };
 
 // IOInterface : MUX handler
