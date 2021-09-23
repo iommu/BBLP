@@ -142,6 +142,7 @@ void MUXOLED::draw(uint8_t sel, uint start_bit, uint delta) {
   // Change active I2C display
   selOLED(sel);
   display[sel].clearDisplay();
+
   // Draw primary lines
   Serial.print("Drawing lines for : ");
   Serial.println(sel);
@@ -185,8 +186,7 @@ void MUXOLED::draw(uint8_t sel, uint start_bit, uint delta) {
                     ? 0
                     : 61; // true = high = 0, false = low = 60
 
-        display[sel].fillRect(pixel_shift - (read_index * 5), y_loc,
-                              2, 2,
+        display[sel].fillRect(pixel_shift - (read_index * 5), y_loc, 2, 2,
                               SSD1306_WHITE);
         Serial.print("drawing");
         Serial.print(y_loc);
