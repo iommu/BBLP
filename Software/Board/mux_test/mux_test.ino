@@ -54,7 +54,7 @@ void setup() {
   Serial.begin(115200);
   Wire.begin();
   // SSD1306_SWITCHCAPVCC = generate display voltage from 3.3V internally
-  for (uint8_t index = 0; index < 4; index++) {
+  for (uint8_t index = 0; index < 8; index++) {
     tcaselect(index);
     if (!display.begin(SSD1306_SWITCHCAPVCC, SCREEN_ADDRESS)) {
       Serial.println(F("SSD1306 allocation failed"));
@@ -83,7 +83,7 @@ void loop() {
       add *= -1;
     display.drawPixel(SCREEN_WIDTH - 10, dot_y, SSD1306_WHITE);
   }
-  for (uint8_t index = 0; index < 4; index++) {
+  for (uint8_t index = 0; index < 8; index++) {
     tcaselect(index);
     display.display();
     Serial.println(millis() - times[index]);
