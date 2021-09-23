@@ -41,6 +41,14 @@ void NetworkHandler::uploadAnswers(String answer) {
   return;
 }
 
+void NetworkHandler::updateTime() {
+  connect();
+  //
+  configTime(36000 /*Syd offset*/, 0 /*daylight 0/3600*/, "pool.ntp.org");
+  // 
+  disconn();
+}
+
 void NetworkHandler::connect() {
   // Start ADC needed for WIFI
   adc_power_on();

@@ -3,6 +3,7 @@
 #include <ArduinoJson.h>
 #include <HTTPClient.h>
 #include <WiFi.h>
+#include "time.h"
 #include <esp_wifi.h>
 
 class NetworkHandler {
@@ -10,6 +11,7 @@ public:
   NetworkHandler();
   String getQuestions();
   void uploadAnswers(String answers);
+  void updateTime();
 
 private:
   void connect();
