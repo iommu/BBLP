@@ -61,17 +61,23 @@ MUXOLED::MUXOLED() {
 
 void MUXOLED::draw8(int shift) {
   // Capped at 0 and bits * PIXEL_PER_BIT + (half of screen);
-  if (pixel_shift < -shift) {
+  Serial.println("shift");
+  Serial.println(pixel_shift);
+  Serial.println(shift);
+  if (pixel_shift + shift < 0) {
     pixel_shift = 0;
-  } else if (pixel_shift >
-             (waves_exp[0].max_size() * PIXELS_PER_BIT + 64 - shift)) {
-    pixel_shift = waves_exp[0].max_size() * PIXELS_PER_BIT + 64;
+  } else if (pixel_shift + shift > waves_exp[0].size() * PIXELS_PER_BIT) {
+    pixel_shift = waves_exp[0].size() * PIXELS_PER_BIT;
   } else {
     pixel_shift += shift;
   }
 
+  Serial.println(pixel_shift);
+  Serial.println(waves_exp[0].max_size() * PIXELS_PER_BIT);
+
   uint start_bit = pixel_shift / PIXELS_PER_BIT;    // First display bit
   uint delta = ceil((float)(128) / PIXELS_PER_BIT); // Number of bits per frame
+  Serial.println(delta);
 
   { // Update IO for all filler positions
     // Set current
@@ -79,10 +85,6 @@ void MUXOLED::draw8(int shift) {
                    waves_exp[2][start_bit], waves_exp[3][start_bit]};
     writePins(pins);
     readPins(pins);
-    Serial.println(pins[0]);
-    Serial.println(pins[1]);
-    Serial.println(pins[2]);
-    Serial.println(pins[3]);
 
     uint8_t write_index = pixel_shift / 5;
     recorded[0] |= pins[0] << write_index;
@@ -116,15 +118,13 @@ void MUXOLED::draw8(int shift) {
                          << write_index;
         }
       }
-      Serial.println("bins");
-      Serial.println(recorded[0], BIN);
-      Serial.println(recorded[1], BIN);
-      Serial.println(recorded[2], BIN);
-      Serial.println(recorded[3], BIN);
     }
   }
 
   // Draw all screens
+  Serial.print("delat : ");
+  Serial.println(delta);
+
   for (uint8_t index = 0; index < 8; index++) {
     draw(index, start_bit, delta);
   }
@@ -136,8 +136,8 @@ void MUXOLED::draw8(int shift) {
 void MUXOLED::draw(uint8_t sel, uint start_bit, uint delta) {
 
   // Cap range
-  if (waves_exp[sel].size() <= start_bit + delta)
-    delta = waves_exp[sel].size() - start_bit;
+  if (waves_exp[sel].size() + 1 <= start_bit + delta)
+    delta = waves_exp[sel].size() - start_bit + 1;
 
   // Change active I2C display
   selOLED(sel);
@@ -148,12 +148,20 @@ void MUXOLED::draw(uint8_t sel, uint start_bit, uint delta) {
   Serial.println(sel);
   Serial.println(start_bit);
   Serial.println(delta);
-  for (uint index = 0; index < delta; index++) {
-    uint y_loc = waves_exp[sel][start_bit + index]
-                     ? 0
-                     : 63; // true = high = 0, false = low = 60
+  Serial.print("accessing : ");
+  Serial.println(delta);
+  for (uint8_t index = 0; index < delta; index++) {
+    Serial.print("accessing : ");
+    Serial.println(index);
+    // If we're trying to access negative bit
+    if (start_bit == 0 && index == 0)
+      continue;
 
-    uint x_loc = -(pixel_shift % PIXELS_PER_BIT) + index * PIXELS_PER_BIT;
+    // Get location, true = high = 0, false = low = 60
+    uint y_loc = waves_exp[sel][start_bit + index - 1] ? 0 : 63;
+    int x_loc = -(pixel_shift % PIXELS_PER_BIT) + (index - 1) * PIXELS_PER_BIT +
+                START_OFFSET;
+
     display[sel].drawLine(x_loc, y_loc, x_loc + PIXELS_PER_BIT, y_loc,
                           SSD1306_WHITE); // Draw hor line
 

@@ -16,6 +16,7 @@
 
 #define PIXELS_PER_BIT 60 // How many pixels on a screen we use for one bit
 #define BITS_PER_SECOND 1 // How many new bits we display on a screen per second
+#define START_OFFSET 64   // Number pixels to offset the middle
 #define MAX_BITS 20       // Max number of bits per wave
 
 // MUXPins : Octa IO expander (4 Input / 4 Output)
@@ -35,7 +36,7 @@ private:
 
 // MUXOLED : Octa OLED interface
 
-class MUXOLED: public MUXPins {
+class MUXOLED : public MUXPins {
 public:
   MUXOLED();
 
@@ -45,12 +46,13 @@ public:
 private:
   void selOLED(uint8_t sel);
 
-  uint8_t mix[8] = {3, 2, 1, 0, 4, 5, 6, 7}; // Switches OLED names with mux addr
+  uint8_t mix[8] = {3, 2, 1, 0,
+                    4, 5, 6, 7}; // Switches OLED names with mux addr
 
-  uint8_t recorded_index = 0; 
-  uint64_t recorded[4] = {0}; // one bit per PIXELS_PER_BIT/12 pixels 
+  uint8_t recorded_index = 0;
+  uint64_t recorded[4] = {0}; // one bit per PIXELS_PER_BIT/12 pixels
 
-  uint16_t pixel_shift, old_shift;     // how many pixels we don't draw
+  uint16_t pixel_shift, old_shift; // how many pixels we don't draw
 
   bool storage_array[8][MAX_BITS] = {{false}};
   Vector<bool> waves_exp[8]; // Expected waves
@@ -67,7 +69,6 @@ public:
 private:
   MUXOLED oleds;
   ESP32Encoder encoder_t;
-
 };
 
 // RGBLED : RGB led handler
