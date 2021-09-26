@@ -33,19 +33,52 @@ void MUXPins::readPins(State pins[4]) {
   pcf.toggleMask(mask);         // Toggle output pins
   uint8_t read2 = pcf.read8();  // Read pass 2
 
+  Serial.println("reading");
+  Serial.print(read1, BIN);
+  Serial.print(" : ");
+  Serial.print(read2, BIN);
+
   // Assign pins using conditional
   pins[0] = (read1 >> mix[4] & 1) == (read2 >> mix[4] & 1)
                 ? (State)(read1 >> mix[4] & 1)
                 : FLOATING;
   pins[1] = (read1 >> mix[5] & 1) == (read2 >> mix[5] & 1)
-                ? (State)(read1 >> mix[4] & 1)
+                ? (State)(read1 >> mix[5] & 1)
                 : FLOATING;
+                Serial.println(pins[1]);
   pins[2] = (read1 >> mix[6] & 1) == (read2 >> mix[6] & 1)
-                ? (State)(read1 >> mix[4] & 1)
+                ? (State)(read1 >> mix[6] & 1)
                 : FLOATING;
   pins[3] = (read1 >> mix[7] & 1) == (read2 >> mix[7] & 1)
-                ? (State)(read1 >> mix[4] & 1)
+                ? (State)(read1 >> mix[7] & 1)
                 : FLOATING;
+
+}
+
+// BItArray : Bit array handling class for large array of
+
+void CrumbArray::setCru(uint16_t index, uint8_t crumb) {
+  Serial.print("setting : ");
+  Serial.print(index);
+  Serial.print(" to ");
+  Serial.println(crumb, BIN);
+
+  index *= 2; // double as we're index every second bit
+  bits[index / 32] &= ~(0b11 << (index % 32)); // Force crumb to 0
+  bits[index / 32] |= crumb << (index % 32);   // Set specific crumb
+}
+
+uint8_t CrumbArray::getCru(uint16_t index) {
+  Serial.print("getting : ");
+  Serial.print(index);
+  Serial.print(" : ");
+  index *= 2; // double as we're index every second bit
+  Serial.println((bits[index / 32] >> (index % 32)) & 0b11);
+  Serial.print(index/32);
+  Serial.print(" , ");
+  Serial.println(index % 32);
+  return (bits[index / 32] >> (index % 32)) &
+         0b11; // get bitshifted crumb via masking
 }
 
 // IOInterface : Octa OLED interface and pin handler
@@ -81,6 +114,17 @@ IOInterface::IOInterface() {
     // Clear OLEDs
     display[index].clearDisplay();
     display[index].display();
+
+    // Set storage array for waves_exp "Vector" clone
+    waves_exp[index].setStorage(storage_array[index]);
+    waves_exp[index].push_back(0);
+    waves_exp[index].push_back(1);
+    waves_exp[index].push_back(0);
+    waves_exp[index].push_back(1);
+    waves_exp[index].push_back(0);
+    waves_exp[index].push_back(1);
+    waves_exp[index].push_back(0);
+    waves_exp[index].push_back(1);
   }
 
   pixel_shift = 0;
@@ -140,14 +184,11 @@ void IOInterface::draw8(int shift) {
     readPins(pins);
 
     uint8_t write_index = pixel_shift / 20;
-    recorded[0] &= ~0b00;                      // Force clear
-    recorded[0] |= pins[0] << write_index * 2; // Set specific bits
-    recorded[1] &= ~0b00;
-    recorded[1] |= pins[1] << write_index * 2;
-    recorded[2] &= ~0b00;
-    recorded[2] |= pins[2] << write_index * 2;
-    recorded[3] &= ~0b00;
-    recorded[3] |= pins[3] << write_index * 2;
+    recorded[0].setCru(write_index, pins[0]);
+    Serial.println(pins[1]);
+    recorded[1].setCru(write_index, pins[1]);
+    recorded[2].setCru(write_index, pins[2]);
+    recorded[3].setCru(write_index, pins[3]);
   }
 
   // Draw all screens
@@ -209,7 +250,9 @@ void IOInterface::draw(uint8_t sel, uint start_bit, uint delta) {
 
     for (int8_t index = draw_to; index >= draw_to - draw_delta; index--) {
       Serial.println(index);
-      switch ((State)((recorded[sel - 4] >> (index * 2)) & 0b11)) {
+      Serial.print("state : ");
+      Serial.println(recorded[sel - 4].getCru(index));
+      switch ((State)(recorded[sel - 4].getCru(index))) {
       case TRUE:
         y_loc = 0;
         break;
@@ -220,6 +263,7 @@ void IOInterface::draw(uint8_t sel, uint start_bit, uint delta) {
         y_loc = 30;
         break;
       }
+      Serial.println(y_loc);
 
       uint8_t x_loc = -pixel_shift + (index * 20) + START_OFFSET;
 

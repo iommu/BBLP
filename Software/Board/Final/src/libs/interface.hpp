@@ -39,11 +39,23 @@ private:
   PCF8574 pcf;
 };
 
+// CrumbArray class, handles pairs of bits
+
+class CrumbArray {
+public:
+  void setCru(uint16_t index, uint8_t crumb);
+  uint8_t getCru(uint16_t index);
+
+private:
+  uint32_t bits[8] = {0};
+};
+
 // IOInterface : MUX handler
 
 class IOInterface : public MUXPins {
 public:
   IOInterface();
+  void setWaves(bool *input[4], bool *output[4]);
 
 private:
   void draw(uint8_t sel, uint start_bit, uint delta);
@@ -52,7 +64,7 @@ private:
 
   uint8_t mix[8] = {3, 2, 1, 0, 4, 5, 6, 7}; // Switch OLED names with mux addr
 
-  uint64_t recorded[4] = {0}; // two bits per PIXELS_PER_BIT/2 pixels
+  CrumbArray recorded[4]; // two bits per PIXELS_PER_BIT/2 pixels
 
   uint16_t pixel_shift, old_shift; // how many pixels we don't draw
 
