@@ -17,7 +17,7 @@
 #define PIXELS_PER_BIT 60 // How many pixels on a screen we use for one bit
 #define BITS_PER_SECOND 1 // How many new bits we display on a screen per second
 #define START_OFFSET 64   // Number pixels to offset the middle
-#define MAX_BITS 20       // Max number of bits per wave
+#define MAX_BITS 16       // Max number of bits per wave 2^4 as four inputs max
 
 // MUXPins : Octa IO expander (4 Input / 4 Output)
 
