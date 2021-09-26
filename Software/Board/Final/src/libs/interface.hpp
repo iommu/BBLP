@@ -45,8 +45,6 @@ class IOInterface : public MUXPins {
 public:
   IOInterface();
 
-
-
 private:
   void draw(uint8_t sel, uint start_bit, uint delta);
   void draw8(int shift);
@@ -62,8 +60,7 @@ private:
   Vector<bool> waves_exp[8]; // Expected waves
 
   Adafruit_SSD1306 display[8];
-    ESP32Encoder encoder_t;
-
+  ESP32Encoder encoder_t;
 };
 
 // RGBLED : RGB led handler

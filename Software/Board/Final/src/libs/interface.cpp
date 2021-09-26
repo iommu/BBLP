@@ -52,20 +52,27 @@ void MUXPins::readPins(State pins[4]) {
 
 // Non OOP handler
 bool t_state = false;
-void tBtnPress() { t_state = true; } 
+void tBtnPress() { t_state = true; }
 
 IOInterface::IOInterface() {
   Serial.println("Initializing MUX OLEDs");
+
   for (uint8_t index = 0; index < 8; index++) {
+    // Create a new display object
     display[index] =
         Adafruit_SSD1306(128 /*w*/, 64 /*h*/, &Wire1, -1, 800000, 400000);
+
+    // Select OLED using I2C MUX
     selOLED(index);
+
+    // Initialise display
     if (!display[index].begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
       Serial.print(F("SSD1306 allocation failed For OLED : "));
       Serial.println(index);
       for (;;)
         ; // Don't proceed, loop forever
     }
+
     // Set screen upside down if one of the lucky few
     if (index > 3) {
       display[index].setRotation(2);
@@ -74,23 +81,12 @@ IOInterface::IOInterface() {
     // Clear OLEDs
     display[index].clearDisplay();
     display[index].display();
-
-    // Set storage array for waves_exp "Vector" clone
-    waves_exp[index].setStorage(storage_array[index]);
-    waves_exp[index].push_back(0);
-    waves_exp[index].push_back(1);
-    waves_exp[index].push_back(0);
-    waves_exp[index].push_back(1);
-    waves_exp[index].push_back(0);
-    waves_exp[index].push_back(1);
-    waves_exp[index].push_back(0);
-    waves_exp[index].push_back(1);
   }
 
   pixel_shift = 0;
   old_shift = 0;
 
-  // Attach all interrupts 
+  // Attach all interrupts
   encoder_t.attachHalfQuad(32, 34); // Time
   encoder_t.clearCount();           // Clear value
 
@@ -114,7 +110,8 @@ IOInterface::IOInterface() {
 
     new_count = encoder_t.getCount();
     if (auto_shift || (old_count != new_count)) {
-      draw8((new_count - old_count) * 20 + auto_shift * 5); // Encoder differential * 20 + auto * 5
+      draw8((new_count - old_count) * 20 +
+            auto_shift * 5); // Encoder differential * 20 + auto * 5
       old_count = new_count;
     }
   }
