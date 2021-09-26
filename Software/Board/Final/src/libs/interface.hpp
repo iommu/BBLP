@@ -22,9 +22,9 @@
 // MUXPins : Octa IO expander (4 Input / 4 Output)
 
 enum State { // PCF pin states
-  FLOATING = -1,
   FALSE = 0,
-  TRUE = 1
+  TRUE = 1,
+  FLOATING = 2
 };
 
 class MUXPins {
@@ -35,10 +35,7 @@ public:
   void readPins(State pins[4]);
 
 private:
-  Vector<bool> waves_rec[8]; // Recived waves
-
-  uint8_t mix[8] = {0, 5, 6, 7, 1, 2, 3, 4}; // Switches Pin names with pcf addr
-
+  uint8_t mix[8] = {0, 5, 6, 7, 1, 2, 3, 4}; // Switch Pin names with pcf addr
   PCF8574 pcf;
 };
 
@@ -54,11 +51,9 @@ public:
 private:
   void selOLED(uint8_t sel);
 
-  uint8_t mix[8] = {3, 2, 1, 0,
-                    4, 5, 6, 7}; // Switches OLED names with mux addr
+  uint8_t mix[8] = {3, 2, 1, 0, 4, 5, 6, 7}; // Switch OLED names with mux addr
 
-  uint8_t recorded_index = 0;
-  uint64_t recorded[4] = {0}; // one bit per PIXELS_PER_BIT/12 pixels
+  uint64_t recorded[4] = {0}; // two bits per PIXELS_PER_BIT/2 pixels
 
   uint16_t pixel_shift, old_shift; // how many pixels we don't draw
 
