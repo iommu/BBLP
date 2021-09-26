@@ -39,16 +39,17 @@ private:
   PCF8574 pcf;
 };
 
-// MUXOLED : Octa OLED interface
+// IOInterface : MUX handler
 
-class MUXOLED : public MUXPins {
+class IOInterface : public MUXPins {
 public:
-  MUXOLED();
+  IOInterface();
 
-  void draw(uint8_t sel, uint start_bit, uint delta);
-  void draw8(int shift);
+
 
 private:
+  void draw(uint8_t sel, uint start_bit, uint delta);
+  void draw8(int shift);
   void selOLED(uint8_t sel);
 
   uint8_t mix[8] = {3, 2, 1, 0, 4, 5, 6, 7}; // Switch OLED names with mux addr
@@ -61,17 +62,8 @@ private:
   Vector<bool> waves_exp[8]; // Expected waves
 
   Adafruit_SSD1306 display[8];
-};
+    ESP32Encoder encoder_t;
 
-// IOInterface : MUX handler
-
-class IOInterface {
-public:
-  IOInterface();
-
-private:
-  MUXOLED oleds;
-  ESP32Encoder encoder_t;
 };
 
 // RGBLED : RGB led handler

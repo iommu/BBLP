@@ -48,9 +48,13 @@ void MUXPins::readPins(State pins[4]) {
                 : FLOATING;
 }
 
-// MUXOLED : Octa OLED interface
+// IOInterface : Octa OLED interface and pin handler
 
-MUXOLED::MUXOLED() {
+// Non OOP handler
+bool t_state = false;
+void tBtnPress() { t_state = true; } 
+
+IOInterface::IOInterface() {
   Serial.println("Initializing MUX OLEDs");
   for (uint8_t index = 0; index < 8; index++) {
     display[index] =
@@ -85,9 +89,38 @@ MUXOLED::MUXOLED() {
 
   pixel_shift = 0;
   old_shift = 0;
+
+  // Attach all interrupts 
+  encoder_t.attachHalfQuad(32, 34); // Time
+  encoder_t.clearCount();           // Clear value
+
+  pinMode(33, INPUT);
+  attachInterrupt(33, tBtnPress, FALLING); // Time
+
+  // Start main interface loop
+  bool auto_shift = 0;
+  int new_count = 0, old_count = 0;
+
+  // Initial draw
+  draw8(0);
+
+  // Main interface loop
+  while (1) {
+    // If button press
+    if (t_state) {
+      auto_shift = !auto_shift;
+      t_state = false;
+    }
+
+    new_count = encoder_t.getCount();
+    if (auto_shift || (old_count != new_count)) {
+      draw8((new_count - old_count) * 20 + auto_shift * 5); // Encoder differential * 20 + auto * 5
+      old_count = new_count;
+    }
+  }
 }
 
-void MUXOLED::draw8(int shift) {
+void IOInterface::draw8(int shift) {
   // Capped at 0 and bits * PIXEL_PER_BIT + (half of screen);
   if (pixel_shift + shift < 0) {
     pixel_shift = 0;
@@ -130,7 +163,7 @@ void MUXOLED::draw8(int shift) {
   old_shift = pixel_shift;
 }
 
-void MUXOLED::draw(uint8_t sel, uint start_bit, uint delta) {
+void IOInterface::draw(uint8_t sel, uint start_bit, uint delta) {
 
   // Cap range
   if (waves_exp[sel].size() + 1 <= start_bit + delta)
@@ -200,45 +233,13 @@ void MUXOLED::draw(uint8_t sel, uint start_bit, uint delta) {
   display[sel].display();
 }
 
-void MUXOLED::selOLED(uint8_t sel) {
+void IOInterface::selOLED(uint8_t sel) {
   // Mix address to get actually address given name
   sel = mix[sel];
 
   Wire1.beginTransmission(0x70 /*TCA chip addr*/);
   Wire1.write(1 << sel);
   Wire1.endTransmission();
-}
-
-// IOInterface
-
-bool t_state = false;
-void tBtnPress() { t_state = true; }
-
-IOInterface::IOInterface() : oleds() {
-  encoder_t.attachHalfQuad(32, 34); // Time
-  encoder_t.clearCount();           // Clear value
-
-  pinMode(33, INPUT);
-  attachInterrupt(33, tBtnPress, FALLING); // Time
-
-  bool auto_shift = 0;
-  int new_count = 0, old_count = 0;
-
-  // initial draw
-  oleds.draw8(0);
-
-  while (1) {
-    if (t_state) {
-      auto_shift = !auto_shift;
-      t_state = false;
-    }
-
-    new_count = encoder_t.getCount();
-    if (auto_shift || (old_count != new_count)) {
-      oleds.draw8((new_count - old_count) * 20 + auto_shift * 5);
-      old_count = new_count;
-    }
-  }
 }
 
 void interfaceFunc(void *parameter) { IOInterface interface = IOInterface(); }
