@@ -28,8 +28,10 @@ void MUXPins::readPins(State pins[4]) {
   // it does not then the pin is not floating
 
   uint8_t read1 = pcf.read8(); // Read pass 1
-  pcf.toggleMask(0xFF);        // Toggle all pins
-  uint8_t read2 = pcf.read8(); // Read pass 2
+  uint8_t mask = (1 << mix[4]) | (1 << mix[5]) | (1 << mix[6]) |
+                 (1 << mix[7]); // Mask of all outputs
+  pcf.toggleMask(mask);         // Toggle output pins
+  uint8_t read2 = pcf.read8();  // Read pass 2
 
   // Assign pins using conditional
   pins[0] = (read1 >> mix[4] & 1) == (read2 >> mix[4] & 1)
