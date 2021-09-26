@@ -18,6 +18,6 @@ private:
   void disconn();
 
   String server_uri = "http://";
-  String ssid = "ssid";
-  String pass = "pass";
+  String ssid = "home";
+  String pass = "Pineapple57";
 };
