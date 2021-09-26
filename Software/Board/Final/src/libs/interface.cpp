@@ -22,7 +22,7 @@ void MUXPins::writePins(State pins[4]) {
 
 void MUXPins::readPins(State pins[4]) {
   // Note : PCF is very simple and uses a simple 8 bit register to read/write
-  // values and hence does NOT have the ability to return a value determining is
+  // values and hence does NOT have the ability to return a value determining if
   // the pin is floating. So instead what we do is toggle the pin and read
   // again, if the pin value matches then the output is being held high/low, if
   // it does not then the pin is not floating
