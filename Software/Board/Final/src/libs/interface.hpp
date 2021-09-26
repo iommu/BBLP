@@ -21,7 +21,7 @@
 
 // MUXPins : Octa IO expander (4 Input / 4 Output)
 
-enum state { // PCF pin states
+enum State { // PCF pin states
   FLOATING = -1,
   FALSE = 0,
   TRUE = 1
@@ -31,8 +31,8 @@ class MUXPins {
 public:
   MUXPins();
 
-  void writePins(state pins[4]);
-  void readPins(state pins[4]);
+  void writePins(State pins[4]);
+  void readPins(State pins[4]);
 
 private:
   Vector<bool> waves_rec[8]; // Recived waves
