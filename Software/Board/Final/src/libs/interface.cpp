@@ -601,65 +601,82 @@ Interface::Interface()
     attachInterrupt(27, qBtnPress, FALLING); // Question
   }
 
-  { // Start encoder UI, while loop because OOP callbacks just not worth it in
-    // C
+  { // Start encoder UI, while loop because OOP callbacks just not worth it with
+    // C callbacks :<
     bool init = false;             // checks if user is on launch page
     bool running = false;          // running a question
     unsigned long revert_time = 0; // used to revert to screen after 3 seconds
                                    // of non selected question
-    uint8_t view_question = 0,
+    uint8_t view_page = 0,
             sel_question = 0; // current view / current selected
     MUXTask = NULL;           // Set task null till it's used
 
-    uint8_t cur_perc = 255; // current question percentage
+    uint8_t cur_perc = 0; // current question percentage
     while (1) {
       if (revert_time && revert_time < millis()) {
         revert_time = 0;
-        view_question = sel_question;     // reset to reverted
+        view_page = sel_question;     // reset to reverted
         encoder_q.setCount(sel_question); // Set encoder back to question
-        updateDisplay(view_question);     // remove bar / refresh screen
+        updateDisplay(view_page);     // remove bar / refresh screen
         // Invert screen to show active
         oled.invertDisplay(true);
         i2c.lock();
         oled.display();
         i2c.unlock();
       } else if ((q_state || cur_perc != ans_corr[sel_question]) && init) {
-        cur_perc = ans_corr[sel_question]; // update percentage
-        q_state = false;                   // reset button
-        running = true;                    // we are now running a question
-        revert_time = 0;              // reset revert time if selected question
-        sel_question = view_question; // we clicked = we want
-        encoder_q.setCount(sel_question); // Set encoder back to question
-                                          // (incase changed during push)
-        updateDisplay(view_question);     // remove bar / refresh screen
+        // Check if we're on "special interface screen"
+        if (encoder_q.getCount() % (exam_questions + 1) == exam_questions) {
+          oled.clearDisplay();
+          oled.invertDisplay(true);
+          oled.setTextColor(SSD1306_WHITE);
+          oled.setTextSize(2);
+          oled.setCursor(1, 1);
+          oled.println(F("Saving!"));
+          oled.setTextSize(1);
+          oled.println("Please wait :)");
+          i2c.lock();
+          oled.display();
+          i2c.unlock();
+          delay(1000);
+          //network.uploadAnswers();
+          revert_time = 1; // force revert
+        } else {
+          cur_perc = ans_corr[sel_question]; // update percentage
+          q_state = false;                   // reset button
+          running = true;                    // we are now running a question
+          revert_time = 0; // reset revert time if selected question
+          sel_question = view_page;     // we clicked = we want
+          encoder_q.setCount(sel_question); // Set encoder back to question
+                                            // (incase changed during push)
+          updateDisplay(view_page);     // remove bar / refresh screen
 
-        // select the question and start
+          // select the question and start
 
-        // Invert screen to show active
-        oled.invertDisplay(true);
-        i2c.lock();
-        oled.display();
-        i2c.unlock();
-        // Start question
-        if (MUXTask != NULL) {
-          vTaskDelete(MUXTask);
+          // Invert screen to show active
+          oled.invertDisplay(true);
+          i2c.lock();
+          oled.display();
+          i2c.unlock();
+          // Start question
+          if (MUXTask != NULL) {
+            vTaskDelete(MUXTask);
+          }
+
+          // Set waves
+          j_output = j_exam["questions"][sel_question]["out"].as<JsonArray>();
+          j_input = j_exam["questions"][sel_question]["in"].as<JsonArray>();
+          question_index = sel_question;
+
+          xTaskCreatePinnedToCore(
+              interfaceFunc,   /* Function to implement the task */
+              "mux interface", /* Name of the task */
+              10000,           /* Stack size in words */
+              NULL,            /* Task input parameter */
+              0,               /* Priority of the task */
+              &MUXTask,        /* Task handle. */
+              1);              /* Core where the task should run */
         }
-
-        // Set waves
-        j_output = j_exam["questions"][sel_question]["out"].as<JsonArray>();
-        j_input = j_exam["questions"][sel_question]["in"].as<JsonArray>();
-        question_index = sel_question;
-
-        xTaskCreatePinnedToCore(
-            interfaceFunc,   /* Function to implement the task */
-            "mux interface", /* Name of the task */
-            10000,           /* Stack size in words */
-            NULL,            /* Task input parameter */
-            0,               /* Priority of the task */
-            &MUXTask,        /* Task handle. */
-            1);              /* Core where the task should run */
-
-      } else if (encoder_q.getCount() % exam_questions != view_question) {
+      } else if (encoder_q.getCount() % (exam_questions + 1) != view_page) {
         if (running) {
           revert_time = millis() + 3000; // revert in 3 seconds past now
         }
@@ -671,9 +688,27 @@ Interface::Interface()
         if (encoder_q.getCount() < 0) {
           encoder_q.setCount(exam_questions - 1);
         }
-        // Change question
-        view_question = encoder_q.getCount() % exam_questions;
-        updateDisplay(view_question);
+
+        // Change page
+        view_page = encoder_q.getCount() % (exam_questions+1);
+
+        // Check if we're on "special interface screen"
+        if (view_page == exam_questions) {
+          oled.clearDisplay();
+          oled.invertDisplay(false);
+          oled.setTextColor(SSD1306_WHITE);
+          oled.setTextSize(2);
+          oled.setCursor(1, 1);
+          oled.println(F("Save?"));
+          oled.setTextSize(1);
+          oled.print(exam_time);
+          oled.println(F("m remaining"));
+          i2c.lock();
+          oled.display();
+          i2c.unlock();
+        } else {
+          updateDisplay(view_page);
+        }
       }
 
       if (revert_time && revert_time >= millis()) { // Draw bar
