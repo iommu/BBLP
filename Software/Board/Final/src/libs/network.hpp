@@ -17,7 +17,7 @@ private:
   void connect();
   void disconn();
 
-  String server_uri = "http://";
+  String server_uri = "https://ac157-thesis.herokuapp.com";
   String ssid = "home";
   String pass = "Pineapple57";
 };

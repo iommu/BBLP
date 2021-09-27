@@ -472,6 +472,9 @@ Interface::Interface()
   if (!debug) { // Connect to wifi and get time
     network.updateTime();
   }
+  Serial.println("getting web stuff");
+  Serial.println(network.getQuestions());
+  Serial.println("yooo");
 
   if (!debug) { // Connect to wifi and pull server json
     oled.clearDisplay();
