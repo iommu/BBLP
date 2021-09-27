@@ -1,5 +1,7 @@
 #include "interface.hpp"
 
+std::mutex i2c; // I2C lock
+
 // MUXPins : Octa IO expander (4 Input / 4 Output)
 
 MUXPins::MUXPins() : pcf(0x20) /* set I2C addr */ {
@@ -86,6 +88,7 @@ uint8_t CrumbArray::getCru(uint16_t index) {
 bool t_state;
 void tBtnPress() { t_state = true; }
 IOInterface *io_interface;
+bool i2c_lock = false; // Super simple
 
 IOInterface::IOInterface() {
   Serial.println("Initializing MUX OLEDs");
@@ -319,7 +322,9 @@ void IOInterface::draw(uint8_t sel, uint start_bit, uint delta) {
     }
   }
   Serial.println(sel);
+  i2c.lock();
   display[sel].display();
+  i2c.unlock();
 }
 
 void IOInterface::selOLED(uint8_t sel) {
@@ -515,7 +520,9 @@ Interface::Interface()
         updateDisplay(view_question);     // remove bar / refresh screen
         // Invert screen to show active
         oled.invertDisplay(true);
+        i2c.lock();
         oled.display();
+        i2c.unlock();
       } else if (q_state && init) {
         q_state = false;              // reset button
         running = true;               // we are now running a question
@@ -529,7 +536,9 @@ Interface::Interface()
 
         // Invert screen to show active
         oled.invertDisplay(true);
+        i2c.lock();
         oled.display();
+        i2c.unlock();
         // Start question
         if (MUXTask != NULL) {
           vTaskDelete(MUXTask);
@@ -565,7 +574,9 @@ Interface::Interface()
             128 - ((revert_time - millis()) * 128 /
                    3000); // convert time left to bar of length of screen
         oled.fillRect(0, 29, bar, 3, SSD1306_WHITE); // draw bar
+        i2c.lock();
         oled.display();
+        i2c.unlock();
       }
       delay(50);
     }
@@ -584,7 +595,9 @@ void Interface::updateDisplay(uint8_t question_num) {
   oled.setCursor(1, 20);
   oled.print(F("Of "));
   oled.println(num_questions);
+  i2c.lock();
   oled.display();
+  i2c.unlock();
 }
 
 // void IRAM_ATTR Interface::updateTime() {}
