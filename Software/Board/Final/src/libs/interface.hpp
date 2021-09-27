@@ -107,6 +107,8 @@ public:
 private:
   void updateDisplay(uint8_t question_num);
 
+  IOInterface mux_interface;
+
   TaskHandle_t MUXTask;
   RGBLED ind_led;
   NetworkHandler network;

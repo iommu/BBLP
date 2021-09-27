@@ -83,8 +83,9 @@ uint8_t CrumbArray::getCru(uint16_t index) {
 // IOInterface : Octa OLED interface and pin handler
 
 // Non OOP handler
-bool t_state = false;
+bool t_state;
 void tBtnPress() { t_state = true; }
+IOInterface *io_interface;
 
 IOInterface::IOInterface() {
   Serial.println("Initializing MUX OLEDs");
@@ -125,6 +126,12 @@ IOInterface::IOInterface() {
     // waves_exp[index].push_back(0);
     // waves_exp[index].push_back(1);
   }
+
+  // Attach all interrupts
+  encoder_t.attachHalfQuad(32, 34); // Time
+
+  pinMode(33, INPUT);
+  attachInterrupt(33, tBtnPress, FALLING); // Time
 }
 
 void IOInterface::setWaves(String input[4], String output[4]) {
@@ -153,9 +160,8 @@ void IOInterface::setWaves(String input[4], String output[4]) {
   for (uint8_t wave_index = 4; wave_index < 8; wave_index++) {
     waves_exp[wave_index].clear();
 
-
     // Inter over output waves
-    for (char bit : output[wave_index-4]) {
+    for (char bit : output[wave_index - 4]) {
       // Push back bit
       if (bit == '0') {
         waves_exp[wave_index].push_back(0);
@@ -164,24 +170,22 @@ void IOInterface::setWaves(String input[4], String output[4]) {
       }
     }
 
-    max_exp_bits = (max_exp_bits < output[wave_index-4].length())
-                       ? max_exp_bits = output[wave_index-4].length()
+    max_exp_bits = (max_exp_bits < output[wave_index - 4].length())
+                       ? max_exp_bits = output[wave_index - 4].length()
                        : max_exp_bits; // Update max_exp_bits if new max found
   }
 };
 
 void IOInterface::being() {
+  // Reset interrupt values
+  encoder_t.clearCount(); // Clear value
+  t_state = false;
+
+  // Reset display values
   pixel_shift = 0;
   old_shift = 0;
 
-  // Attach all interrupts
-  encoder_t.attachHalfQuad(32, 34); // Time
-  encoder_t.clearCount();           // Clear value
-
-  pinMode(33, INPUT);
-  attachInterrupt(33, tBtnPress, FALLING); // Time
-
-  // Start main interface loop
+  // Set main interface values
   bool auto_shift = 0;
   int new_count = 0, old_count = 0;
 
@@ -327,7 +331,7 @@ void IOInterface::selOLED(uint8_t sel) {
   Wire1.endTransmission();
 }
 
-void interfaceFunc(void *parameter) { IOInterface interface = IOInterface(); }
+void interfaceFunc(void *parameter) { io_interface->being(); }
 
 // RGBLED
 
@@ -391,8 +395,11 @@ bool q_state = false;
 void qBtnPress() { q_state = true; }
 
 Interface::Interface()
-    : ind_led(), network(), j_questions(2048),
+    : mux_interface(), ind_led(), network(), j_questions(2048),
       oled(128 /*w*/, 32 /*h*/, &Wire, -1) {
+  // Set public interface
+  io_interface = &mux_interface;
+
   // Setup OLED
   if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
     Serial.println("Primary SSD1306 allocation failed");
