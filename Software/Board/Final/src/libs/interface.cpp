@@ -1,6 +1,10 @@
 #include "interface.hpp"
 
+// Non OOP stuff because callbacks, yay
+
 std::mutex i2c; // I2C lock
+
+uint8_t ans_corr[10] = {0}; // Answer correctness array, Max 10 questions
 
 // MUXPins : Octa IO expander (4 Input / 4 Output)
 
@@ -88,7 +92,9 @@ uint8_t CrumbArray::getCru(uint16_t index) {
 bool t_state;
 void tBtnPress() { t_state = true; }
 
-IOInterface::IOInterface(JsonArray j_output, JsonArray j_input) {
+IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
+                         uint8_t question_index = 0)
+    : question_index(question_index) {
   Serial.println("Initializing MUX OLEDs");
   Wire1.begin(21, 22); // RE-setup for some reason?
 
@@ -130,12 +136,6 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input) {
     // waves_exp[index].push_back(0);
     // waves_exp[index].push_back(1);
   }
-
-  // Attach all interrupts
-  encoder_t.attachHalfQuad(32, 34); // Time
-
-  pinMode(33, INPUT);
-  attachInterrupt(33, tBtnPress, FALLING); // Time
 
   max_exp_bits = 0; // Reset
   Serial.println("setting waves");
@@ -184,6 +184,12 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input) {
                        : max_exp_bits; // Update max_exp_bits if new max found
   }
 
+  // Attach all interrupts
+  encoder_t.attachHalfQuad(32, 34); // Time
+
+  pinMode(33, INPUT);
+  attachInterrupt(33, tBtnPress, FALLING); // Time
+
   // Reset interrupt values
   encoder_t.clearCount(); // Clear value
   t_state = false;
@@ -203,8 +209,21 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input) {
   while (1) {
     // If button press
     if (t_state) {
-      auto_shift = !auto_shift;
-      t_state = false;
+      t_state = false; // reset because processing
+      uint8_t index;
+      // Check we're still holding it for 2 seconds
+      for (index = 0; index < 200; index++) {
+        delay(10);
+        if (digitalRead(33))
+          break;
+      }
+      if (index >= 100) {
+        Serial.println("Checking answers");
+        checkQuestion();
+      } else {
+        Serial.println("Starting autoshift");
+        auto_shift = !auto_shift;
+      }
     }
 
     new_count = encoder_t.getCount();
@@ -374,9 +393,40 @@ void IOInterface::selOLED(uint8_t sel) {
   Wire1.endTransmission();
 }
 
-JsonArray j_output, j_input;
+void IOInterface::checkQuestion() {
+  ans_corr[question_index] = 0; // set max
+  for (uint8_t index = 0; index < max_exp_bits; index++) {
+    State pins[] = {(State)waves_exp[0][index], (State)waves_exp[1][index],
+                    (State)waves_exp[2][index], (State)waves_exp[3][index]};
+    writePins(pins);
+    readPins(pins);
+    Serial.print("Pass ");
+    Serial.print(index);
+    if ((!waves_exp[4].size() || (State)waves_exp[4][index] == pins[0]) &&
+        (!waves_exp[5].size() || (State)waves_exp[5][index] == pins[1]) &&
+        (!waves_exp[6].size() || (State)waves_exp[6][index] == pins[2]) &&
+        (!waves_exp[7].size() || (State)waves_exp[7][index] == pins[3])) {
+      // Correct
+      Serial.println(" Correct!");
+      ans_corr[question_index]++;
+    } else {
+      // Incorr
+      Serial.println(" Fail!");
+    }
+  }
+  // average
+  Serial.println(ans_corr[question_index]);
+  ans_corr[question_index] =
+      ((float)ans_corr[question_index] / max_exp_bits) * 100;
+  Serial.println(ans_corr[question_index]);
+}
 
-void interfaceFunc(void *parameter) { IOInterface(j_output, j_input); }
+JsonArray j_output, j_input;
+uint8_t question_index;
+
+void interfaceFunc(void *parameter) {
+  IOInterface(j_output, j_input, question_index);
+}
 
 // RGBLED
 
@@ -440,8 +490,7 @@ bool q_state = false;
 void qBtnPress() { q_state = true; }
 
 Interface::Interface()
-    : ind_led(), network(), j_questions(2048),
-      oled(128 /*w*/, 32 /*h*/, &Wire, -1) {
+    : ind_led(), network(), j_exam(2048), oled(128 /*w*/, 32 /*h*/, &Wire, -1) {
 
   // Setup OLED
   if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -469,12 +518,8 @@ Interface::Interface()
     delay(2000);
   }
 
-  if (!debug) { // Connect to wifi and get time
-    network.updateTime();
-  }
-  Serial.println("getting web stuff");
-  Serial.println(network.getQuestions());
-  Serial.println("yooo");
+  // Connect to wifi and get time
+  network.updateTime();
 
   if (!debug) { // Connect to wifi and pull server json
     oled.clearDisplay();
@@ -485,16 +530,22 @@ Interface::Interface()
     oled.setCursor(1, 1);
     oled.println(F("Getting   questions"));
     oled.display();
-    deserializeJson(j_questions,
+    deserializeJson(j_exam,
                     network.getQuestions()); // Convert network String to JSON
-    num_questions = j_questions["questions"].size();
+    exam_questions = j_exam["questions"].size();
   } else {
-    deserializeJson(j_questions,
+    deserializeJson(j_exam,
                     "{\"name\":\"test exam "
-                    "1\",\"questions\":[{\"out\":[\"0101\",\"0011\"],\"in\":["
+                    "1\",\"time\": \"20\", "
+                    "\"questions\":[{\"out\":[\"0101\",\"0011\"],\"in\":["
                     "\"0111\"]},{\"out\":[\"0101\",\"0011\"],\"in\":[\"0001\"]}"
                     ",{\"out\":[\"0101\",\"0011\"],\"in\":[\"0110\"]}]}");
-    num_questions = j_questions["questions"].size();
+    Serial.print("Getting no. questions : ");
+    exam_questions = j_exam["questions"].size();
+    Serial.println(exam_questions);
+    Serial.print("Getting time : ");
+    exam_time = j_exam["time"].as<uint8_t>();
+    Serial.println(exam_time);
   }
 
   if (!debug) { // Getting student ID from NFC
@@ -525,9 +576,10 @@ Interface::Interface()
     oled.setTextColor(SSD1306_WHITE);
     oled.setTextSize(2);
     oled.setCursor(1, 1);
-    oled.print(num_questions);
+    oled.print(exam_questions);
     oled.println(F(" question"));
-    oled.println(F("2 hours"));
+    oled.print(exam_time);
+    oled.print(" minutes");
     oled.display();
   }
 
@@ -559,6 +611,7 @@ Interface::Interface()
             sel_question = 0; // current view / current selected
     MUXTask = NULL;           // Set task null till it's used
 
+    uint8_t cur_perc = 255; // current question percentage
     while (1) {
       if (revert_time && revert_time < millis()) {
         revert_time = 0;
@@ -570,9 +623,10 @@ Interface::Interface()
         i2c.lock();
         oled.display();
         i2c.unlock();
-      } else if (q_state && init) {
-        q_state = false;              // reset button
-        running = true;               // we are now running a question
+      } else if ((q_state || cur_perc != ans_corr[sel_question]) && init) {
+        cur_perc = ans_corr[sel_question]; // update percentage
+        q_state = false;                   // reset button
+        running = true;                    // we are now running a question
         revert_time = 0;              // reset revert time if selected question
         sel_question = view_question; // we clicked = we want
         encoder_q.setCount(sel_question); // Set encoder back to question
@@ -592,9 +646,9 @@ Interface::Interface()
         }
 
         // Set waves
-        j_output =
-            j_questions["questions"][sel_question]["out"].as<JsonArray>();
-        j_input = j_questions["questions"][sel_question]["in"].as<JsonArray>();
+        j_output = j_exam["questions"][sel_question]["out"].as<JsonArray>();
+        j_input = j_exam["questions"][sel_question]["in"].as<JsonArray>();
+        question_index = sel_question;
 
         xTaskCreatePinnedToCore(
             interfaceFunc,   /* Function to implement the task */
@@ -603,9 +657,9 @@ Interface::Interface()
             NULL,            /* Task input parameter */
             0,               /* Priority of the task */
             &MUXTask,        /* Task handle. */
-            0);              /* Core where the task should run */
+            1);              /* Core where the task should run */
 
-      } else if (encoder_q.getCount() % num_questions != view_question) {
+      } else if (encoder_q.getCount() % exam_questions != view_question) {
         if (running) {
           revert_time = millis() + 3000; // revert in 3 seconds past now
         }
@@ -615,10 +669,10 @@ Interface::Interface()
         }
         // Wrap if neg
         if (encoder_q.getCount() < 0) {
-          encoder_q.setCount(num_questions - 1);
+          encoder_q.setCount(exam_questions - 1);
         }
         // Change question
-        view_question = encoder_q.getCount() % num_questions;
+        view_question = encoder_q.getCount() % exam_questions;
         updateDisplay(view_question);
       }
 
@@ -647,7 +701,14 @@ void Interface::updateDisplay(uint8_t question_num) {
   oled.setTextSize(1);
   oled.setCursor(1, 20);
   oled.print(F("Of "));
-  oled.println(num_questions);
+  oled.print(exam_questions);
+  oled.print("      ");
+  oled.print(ans_corr[question_num]);
+  oled.print("%");
+  oled.println(" done!");
+  rgb_led.setRGB(250 - 25 * ans_corr[question_num], 25 * ans_corr[question_num],
+                 0);
+  rgb_led.setRGB(0, 0, 0);
   i2c.lock();
   oled.display();
   i2c.unlock();

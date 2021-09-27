@@ -55,13 +55,15 @@ private:
 
 class IOInterface : public MUXPins {
 public:
-  IOInterface(JsonArray j_output, JsonArray j_input);
+  IOInterface(JsonArray j_output, JsonArray j_input, uint8_t question_index);
 
 private:
   void draw(uint8_t sel, uint start_bit, int delta);
   void draw8(int shift);
   void selOLED(uint8_t sel);
+  void checkQuestion();
 
+  uint8_t question_index;
   uint8_t mix[8] = {3, 2, 1, 0, 4, 5, 6, 7}; // Switch OLED names with mux addr
 
   CrumbArray recorded[4]; // two bits per PIXELS_PER_BIT/2 pixels
@@ -109,16 +111,16 @@ private:
   TaskHandle_t MUXTask;
   RGBLED ind_led;
   NetworkHandler network;
-  DynamicJsonDocument j_questions;
+  DynamicJsonDocument j_exam;
   RGBLED rgb_led;
   ESP32Encoder encoder_q;
   Adafruit_SSD1306 oled;
   //
   // void IRAM_ATTR updateTime(); // Updates small clock top right
   // hw_timer_t * timer = NULL;
-  int8_t answer_time;
-  uint8_t num_questions;
-
+  uint8_t exam_questions;
+  uint8_t exam_time;
+  struct tm exam_time_start;
   //
   uint32_t student_id;
 };
