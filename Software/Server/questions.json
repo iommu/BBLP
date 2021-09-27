@@ -1,5 +1,6 @@
 {
   "name": "test exam 1",
+  "time": "20", 
   "questions": [
     {
       "out": ["0101", "0011"],
