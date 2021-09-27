@@ -45,14 +45,13 @@ void MUXPins::readPins(State pins[4]) {
   pins[1] = (read1 >> mix[5] & 1) == (read2 >> mix[5] & 1)
                 ? (State)(read1 >> mix[5] & 1)
                 : FLOATING;
-                Serial.println(pins[1]);
+  Serial.println(pins[1]);
   pins[2] = (read1 >> mix[6] & 1) == (read2 >> mix[6] & 1)
                 ? (State)(read1 >> mix[6] & 1)
                 : FLOATING;
   pins[3] = (read1 >> mix[7] & 1) == (read2 >> mix[7] & 1)
                 ? (State)(read1 >> mix[7] & 1)
                 : FLOATING;
-
 }
 
 // BItArray : Bit array handling class for large array of
@@ -74,7 +73,7 @@ uint8_t CrumbArray::getCru(uint16_t index) {
   Serial.print(" : ");
   index *= 2; // double as we're index every second bit
   Serial.println((bits[index / 32] >> (index % 32)) & 0b11);
-  Serial.print(index/32);
+  Serial.print(index / 32);
   Serial.print(" , ");
   Serial.println(index % 32);
   return (bits[index / 32] >> (index % 32)) &
@@ -117,16 +116,61 @@ IOInterface::IOInterface() {
 
     // Set storage array for waves_exp "Vector" clone
     waves_exp[index].setStorage(storage_array[index]);
-    waves_exp[index].push_back(0);
-    waves_exp[index].push_back(1);
-    waves_exp[index].push_back(0);
-    waves_exp[index].push_back(1);
-    waves_exp[index].push_back(0);
-    waves_exp[index].push_back(1);
-    waves_exp[index].push_back(0);
-    waves_exp[index].push_back(1);
+    // waves_exp[index].push_back(0);
+    // waves_exp[index].push_back(1);
+    // waves_exp[index].push_back(0);
+    // waves_exp[index].push_back(1);
+    // waves_exp[index].push_back(0);
+    // waves_exp[index].push_back(1);
+    // waves_exp[index].push_back(0);
+    // waves_exp[index].push_back(1);
+  }
+}
+
+void IOInterface::setWaves(String input[4], String output[4]) {
+  max_exp_bits = 0; // Reset
+
+  // For input waves
+  for (uint8_t wave_index = 0; wave_index < 4; wave_index++) {
+    waves_exp[wave_index].clear(); // Clear all waves
+
+    // Inter over input waves
+    for (char bit : input[wave_index]) {
+      // Push back bit
+      if (bit == '0') {
+        waves_exp[wave_index].push_back(0);
+      } else { // 1 (no other option)
+        waves_exp[wave_index].push_back(1);
+      }
+    }
+
+    max_exp_bits = (max_exp_bits < input[wave_index].length())
+                       ? max_exp_bits = input[wave_index].length()
+                       : max_exp_bits; // Update max_exp_bits if new max found
   }
 
+  // For output waves
+  for (uint8_t wave_index = 4; wave_index < 8; wave_index++) {
+    waves_exp[wave_index].clear();
+
+
+    // Inter over output waves
+    for (char bit : output[wave_index-4]) {
+      // Push back bit
+      if (bit == '0') {
+        waves_exp[wave_index].push_back(0);
+      } else { // 1 (no other option)
+        waves_exp[wave_index].push_back(1);
+      }
+    }
+
+    max_exp_bits = (max_exp_bits < output[wave_index-4].length())
+                       ? max_exp_bits = output[wave_index-4].length()
+                       : max_exp_bits; // Update max_exp_bits if new max found
+  }
+};
+
+void IOInterface::being() {
   pixel_shift = 0;
   old_shift = 0;
 

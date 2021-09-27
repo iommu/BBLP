@@ -55,7 +55,8 @@ private:
 class IOInterface : public MUXPins {
 public:
   IOInterface();
-  void setWaves(bool *input[4], bool *output[4]);
+  void setWaves(String input[4], String output[4]);
+  void being();
 
 private:
   void draw(uint8_t sel, uint start_bit, uint delta);
@@ -68,6 +69,7 @@ private:
 
   uint16_t pixel_shift, old_shift; // how many pixels we don't draw
 
+  uint8_t max_exp_bits;
   bool storage_array[8][MAX_BITS] = {{false}};
   Vector<bool> waves_exp[8]; // Expected waves
 
