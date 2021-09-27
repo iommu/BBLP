@@ -87,14 +87,14 @@ uint8_t CrumbArray::getCru(uint16_t index) {
 // Non OOP handler
 bool t_state;
 void tBtnPress() { t_state = true; }
-IOInterface *io_interface;
-bool i2c_lock = false; // Super simple
 
-IOInterface::IOInterface() {
+IOInterface::IOInterface(JsonArray j_output, JsonArray j_input) {
   Serial.println("Initializing MUX OLEDs");
+  Wire1.begin(21, 22); // RE-setup for some reason?
 
   for (uint8_t index = 0; index < 8; index++) {
     // Create a new display object
+    i2c.lock();
     display[index] =
         Adafruit_SSD1306(128 /*w*/, 64 /*h*/, &Wire1, -1, 800000, 400000);
 
@@ -117,6 +117,7 @@ IOInterface::IOInterface() {
     // Clear OLEDs
     display[index].clearDisplay();
     display[index].display();
+    i2c.unlock();
 
     // Set storage array for waves_exp "Vector" clone
     waves_exp[index].setStorage(storage_array[index]);
@@ -135,17 +136,41 @@ IOInterface::IOInterface() {
 
   pinMode(33, INPUT);
   attachInterrupt(33, tBtnPress, FALLING); // Time
-}
 
-void IOInterface::setWaves(String input[4], String output[4]) {
   max_exp_bits = 0; // Reset
+  Serial.println("setting waves");
+  Serial.println(j_output.size());
+  Serial.println(j_input.size());
+  // For ouput waves
+  for (uint8_t wave_index = 0; wave_index < j_output.size(); wave_index++) {
+    waves_exp[wave_index].clear();                    // Clear all waves
+    String ouput = j_output[wave_index].as<String>(); // Type cast
+    Serial.print("ouput : ");
+    // Inter over ouput waves
+    for (char bit : ouput) {
+      // Push back bit
+      if (bit == '0') {
+        waves_exp[wave_index].push_back(0);
+        Serial.print(0);
+      } else { // 1 (no other option)
+        Serial.print(1);
+        waves_exp[wave_index].push_back(1);
+      }
+    }
+    Serial.println();
+    max_exp_bits = (max_exp_bits < ouput.length())
+                       ? max_exp_bits = ouput.length()
+                       : max_exp_bits; // Update max_exp_bits if new max found
+  }
 
   // For input waves
-  for (uint8_t wave_index = 0; wave_index < 4; wave_index++) {
-    waves_exp[wave_index].clear(); // Clear all waves
-
+  for (uint8_t wave_index = 4; wave_index < j_input.size() + 4; wave_index++) {
+    waves_exp[wave_index].clear();                       // Clear all waves
+    String input = j_input[wave_index - 4].as<String>(); // Type cast
+    Serial.print("input : ");
+    Serial.println(input);
     // Inter over input waves
-    for (char bit : input[wave_index]) {
+    for (char bit : input) {
       // Push back bit
       if (bit == '0') {
         waves_exp[wave_index].push_back(0);
@@ -154,32 +179,11 @@ void IOInterface::setWaves(String input[4], String output[4]) {
       }
     }
 
-    max_exp_bits = (max_exp_bits < input[wave_index].length())
-                       ? max_exp_bits = input[wave_index].length()
+    max_exp_bits = (max_exp_bits < input.length())
+                       ? max_exp_bits = input.length()
                        : max_exp_bits; // Update max_exp_bits if new max found
   }
 
-  // For output waves
-  for (uint8_t wave_index = 4; wave_index < 8; wave_index++) {
-    waves_exp[wave_index].clear();
-
-    // Inter over output waves
-    for (char bit : output[wave_index - 4]) {
-      // Push back bit
-      if (bit == '0') {
-        waves_exp[wave_index].push_back(0);
-      } else { // 1 (no other option)
-        waves_exp[wave_index].push_back(1);
-      }
-    }
-
-    max_exp_bits = (max_exp_bits < output[wave_index - 4].length())
-                       ? max_exp_bits = output[wave_index - 4].length()
-                       : max_exp_bits; // Update max_exp_bits if new max found
-  }
-};
-
-void IOInterface::being() {
   // Reset interrupt values
   encoder_t.clearCount(); // Clear value
   t_state = false;
@@ -222,8 +226,12 @@ void IOInterface::draw8(int shift) {
     pixel_shift += shift;
   }
 
-  uint start_bit = pixel_shift / PIXELS_PER_BIT;    // First display bit
-  uint delta = ceil((float)(128) / PIXELS_PER_BIT); // Number of bits per frame
+  Serial.print("pixel shift");
+  Serial.println(pixel_shift);
+
+  uint start_bit = pixel_shift / PIXELS_PER_BIT; // First display bit
+  Serial.println(start_bit);
+  int delta = ceil((float)(128) / PIXELS_PER_BIT); // Number of bits per frame
   Serial.println(delta);
 
   { // Update IO for all filler positions
@@ -252,8 +260,22 @@ void IOInterface::draw8(int shift) {
   old_shift = pixel_shift;
 }
 
-void IOInterface::draw(uint8_t sel, uint start_bit, uint delta) {
-
+void IOInterface::draw(uint8_t sel, uint start_bit, int delta) {
+  // Don't draw if out of range
+  if (waves_exp[sel].size() == 0) {
+    Serial.print("not drawing ");
+    Serial.println(sel);
+    selOLED(sel);
+    display[sel].clearDisplay();
+    display[sel].display();
+    return;
+  }
+  Serial.print("drawing ");
+  Serial.print(sel);
+  Serial.print(" : ");
+  for (bool test : waves_exp[sel])
+    Serial.print(test);
+  Serial.println("ehh");
   // Cap range
   if (waves_exp[sel].size() + 1 <= start_bit + delta)
     delta = waves_exp[sel].size() - start_bit + 1;
@@ -267,7 +289,14 @@ void IOInterface::draw(uint8_t sel, uint start_bit, uint delta) {
     // If we're trying to access negative bit
     if (start_bit == 0 && index == 0)
       continue;
-
+    Serial.println(waves_exp[sel].size());
+    Serial.println(start_bit);
+    Serial.println(index);
+    Serial.print(index);
+    Serial.println(pixel_shift);
+    Serial.print(" = ");
+    Serial.print(waves_exp[sel][start_bit + index - 1]);
+    Serial.print(" : ");
     // Get location, true = high = 0, false = low = 60
     uint y_loc = waves_exp[sel][start_bit + index - 1] ? 0 : 63;
     int x_loc = -(pixel_shift % PIXELS_PER_BIT) + (index - 1) * PIXELS_PER_BIT +
@@ -277,16 +306,25 @@ void IOInterface::draw(uint8_t sel, uint start_bit, uint delta) {
                           SSD1306_WHITE); // Draw hor line
 
     // If next bit is not same as current bit draw next bit
-    if (waves_exp[sel][start_bit + index] !=
-        waves_exp[sel][start_bit + index + 1]) {
+    Serial.println();
+    Serial.print(waves_exp[sel].size());
+    Serial.print(" : ");
+    Serial.print(start_bit);
+    Serial.print(" : ");
+    Serial.print(index);
+    Serial.println();
+    if (((index + 1) < delta) && waves_exp[sel][start_bit + index - 1] !=
+                                     waves_exp[sel][start_bit + index]) {
       display[sel].drawLine(x_loc + PIXELS_PER_BIT, 0, x_loc + PIXELS_PER_BIT,
                             63,
                             SSD1306_WHITE); // Draw hor line
     }
   }
 
+  Serial.println();
+
   // Draw recived lines (if input OLED)
-  if (sel > 3) {
+  if (sel > 3 && delta >= 1) {
     Serial.print("Drawing recoded for : ");
     Serial.println(sel);
     // Switch for State
@@ -336,7 +374,9 @@ void IOInterface::selOLED(uint8_t sel) {
   Wire1.endTransmission();
 }
 
-void interfaceFunc(void *parameter) { io_interface->being(); }
+JsonArray j_output, j_input;
+
+void interfaceFunc(void *parameter) { IOInterface(j_output, j_input); }
 
 // RGBLED
 
@@ -400,10 +440,8 @@ bool q_state = false;
 void qBtnPress() { q_state = true; }
 
 Interface::Interface()
-    : mux_interface(), ind_led(), network(), j_questions(2048),
+    : ind_led(), network(), j_questions(2048),
       oled(128 /*w*/, 32 /*h*/, &Wire, -1) {
-  // Set public interface
-  io_interface = &mux_interface;
 
   // Setup OLED
   if (!oled.begin(SSD1306_SWITCHCAPVCC, 0x3C)) {
@@ -446,9 +484,15 @@ Interface::Interface()
     oled.display();
     deserializeJson(j_questions,
                     network.getQuestions()); // Convert network String to JSON
-    // num_question = ...
+    num_questions = j_questions["questions"].size();
+  } else {
+    deserializeJson(j_questions,
+                    "{\"name\":\"test exam "
+                    "1\",\"questions\":[{\"out\":[\"0101\",\"0011\"],\"in\":["
+                    "\"0111\"]},{\"out\":[\"0101\",\"0011\"],\"in\":[\"0001\"]}"
+                    ",{\"out\":[\"0101\",\"0011\"],\"in\":[\"0110\"]}]}");
+    num_questions = j_questions["questions"].size();
   }
-  num_questions = 5;
 
   if (!debug) { // Getting student ID from NFC
     oled.clearDisplay();
@@ -544,6 +588,11 @@ Interface::Interface()
           vTaskDelete(MUXTask);
         }
 
+        // Set waves
+        j_output =
+            j_questions["questions"][sel_question]["out"].as<JsonArray>();
+        j_input = j_questions["questions"][sel_question]["in"].as<JsonArray>();
+
         xTaskCreatePinnedToCore(
             interfaceFunc,   /* Function to implement the task */
             "mux interface", /* Name of the task */
@@ -552,6 +601,7 @@ Interface::Interface()
             0,               /* Priority of the task */
             &MUXTask,        /* Task handle. */
             0);              /* Core where the task should run */
+
       } else if (encoder_q.getCount() % num_questions != view_question) {
         if (running) {
           revert_time = millis() + 3000; // revert in 3 seconds past now

@@ -18,7 +18,7 @@
 #define PIXELS_PER_BIT 60 // How many pixels on a screen we use for one bit
 #define BITS_PER_SECOND 1 // How many new bits we display on a screen per second
 #define START_OFFSET 64   // Number pixels to offset the middle
-#define MAX_BITS 16       // Max number of bits per wave 2^4 as four inputs max
+#define MAX_BITS 20       // Max number of bits per wave 2^4 as four inputs max
 
 // MUXPins : Octa IO expander (4 Input / 4 Output)
 
@@ -55,12 +55,10 @@ private:
 
 class IOInterface : public MUXPins {
 public:
-  IOInterface();
-  void setWaves(String input[4], String output[4]);
-  void being();
+  IOInterface(JsonArray j_output, JsonArray j_input);
 
 private:
-  void draw(uint8_t sel, uint start_bit, uint delta);
+  void draw(uint8_t sel, uint start_bit, int delta);
   void draw8(int shift);
   void selOLED(uint8_t sel);
 
@@ -107,8 +105,6 @@ public:
 
 private:
   void updateDisplay(uint8_t question_num);
-
-  IOInterface mux_interface;
 
   TaskHandle_t MUXTask;
   RGBLED ind_led;

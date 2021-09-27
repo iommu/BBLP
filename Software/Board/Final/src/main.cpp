@@ -10,7 +10,6 @@ void setup() {
 
   Wire1.begin(21, 22); // Setup wire 0 for MUX OLEDs
 
-
   Interface(); // Start primary interface
 }
 
