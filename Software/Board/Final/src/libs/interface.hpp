@@ -8,10 +8,10 @@
 #include <Adafruit_SSD1306.h>
 #include <ArduinoJson.h>
 #include <ESP32Encoder.h>
-#include <PCF8574.h>
 #include <Vector.h>
 
 #include "network.hpp"
+#include "modules.hpp"
 
 // MUX Interface vars
 
@@ -19,26 +19,6 @@
 #define BITS_PER_SECOND 1 // How many new bits we display on a screen per second
 #define START_OFFSET 64   // Number pixels to offset the middle
 #define MAX_BITS 20       // Max number of bits per wave 2^4 as four inputs max
-
-// MUXPins : Octa IO expander (4 Input / 4 Output)
-
-enum State { // PCF pin states
-  FALSE = 0,
-  TRUE = 1,
-  FLOATING = 2
-};
-
-class MUXPins {
-public:
-  MUXPins();
-
-  void writePins(State pins[4]);
-  void readPins(State pins[4]);
-
-private:
-  uint8_t mix[8] = {0, 5, 6, 7, 1, 2, 3, 4}; // Switch Pin names with pcf addr
-  PCF8574 pcf;
-};
 
 // CrumbArray class, handles pairs of bits
 
@@ -78,27 +58,6 @@ private:
   ESP32Encoder encoder_t;
 };
 
-// RGBLED : RGB led handler
-
-class RGBLED {
-public:
-  RGBLED(uint8_t r, uint8_t g, uint8_t b);
-  void setRGB(uint8_t r, uint8_t g, uint8_t b);
-
-private:
-};
-
-// NFC : PN532 handler
-
-class NFC {
-public:
-  NFC();
-
-  uint32_t getID(); // Gets transmitted ID from NFC
-private:
-  Adafruit_PN532 nfc;
-};
-
 // Interface : Primary interface code
 
 class Interface {
@@ -112,7 +71,6 @@ private:
   RGBLED ind_led;
   NetworkHandler network;
   DynamicJsonDocument j_exam;
-  RGBLED rgb_led;
   ESP32Encoder encoder_q;
   Adafruit_SSD1306 oled;
   //
