@@ -275,7 +275,7 @@ void IOInterface::draw(uint8_t sel, uint start_bit, int delta) {
     Serial.print(waves_exp[sel][start_bit + index - 1]);
     Serial.print(" : ");
     // Get location, true = high = 0, false = low = 60
-    uint y_loc = waves_exp[sel][start_bit + index - 1] ? 0 : 63;
+    uint y_loc = waves_exp[sel][start_bit + index - 1] ? 2 : 61;
     int x_loc = -(pixel_shift % PIXELS_PER_BIT) + (index - 1) * PIXELS_PER_BIT +
                 START_OFFSET;
 
@@ -292,8 +292,8 @@ void IOInterface::draw(uint8_t sel, uint start_bit, int delta) {
     Serial.println();
     if (((index + 1) < delta) && waves_exp[sel][start_bit + index - 1] !=
                                      waves_exp[sel][start_bit + index]) {
-      display[sel].drawLine(x_loc + PIXELS_PER_BIT, 0, x_loc + PIXELS_PER_BIT,
-                            63,
+      display[sel].drawLine(x_loc + PIXELS_PER_BIT, 2, x_loc + PIXELS_PER_BIT,
+                            61,
                             SSD1306_WHITE); // Draw hor line
     }
   }
@@ -323,7 +323,7 @@ void IOInterface::draw(uint8_t sel, uint start_bit, int delta) {
         y_loc = 0;
         break;
       case FALSE:
-        y_loc = 60;
+        y_loc = 59;
         break;
       case FALLING:
         y_loc = 30;
@@ -333,11 +333,11 @@ void IOInterface::draw(uint8_t sel, uint start_bit, int delta) {
 
       uint8_t x_loc = -pixel_shift + (index * 20) + START_OFFSET;
 
-      display[sel].fillRect(x_loc - 1, y_loc, 4, 4, SSD1306_WHITE);
+      display[sel].fillRect(x_loc - 2, y_loc, 5, 5, SSD1306_WHITE);
     }
   }
   Serial.println(sel);
-  
+
   i2c.lock();
   display[sel].display();
   i2c.unlock();
