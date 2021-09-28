@@ -231,6 +231,22 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
       draw8((new_count - old_count) * 20 +
             auto_shift * 5); // Encoder differential * 20 + auto * 5
       old_count = new_count;
+    } else { // If not updating all, check individual
+      State pins[4];
+      readPins(pins);
+
+      uint8_t write_index = pixel_shift / 20;
+      uint start_bit = pixel_shift / PIXELS_PER_BIT; // First display bit
+      Serial.println(start_bit);
+      int delta =
+          ceil((float)(128) / PIXELS_PER_BIT); // Number of bits per frame
+      Serial.println(delta);
+      for (uint pin_index = 0; pin_index < 4; pin_index++) {
+        if ((int)pins[pin_index] != recorded[pin_index].getCru(write_index)) {
+          recorded[0].setCru(write_index, pins[pin_index]);
+          draw(pin_index + 4, start_bit, delta);
+        }
+      }
     }
   }
 }
@@ -263,7 +279,6 @@ void IOInterface::draw8(int shift) {
 
     uint8_t write_index = pixel_shift / 20;
     recorded[0].setCru(write_index, pins[0]);
-    Serial.println(pins[1]);
     recorded[1].setCru(write_index, pins[1]);
     recorded[2].setCru(write_index, pins[2]);
     recorded[3].setCru(write_index, pins[3]);
@@ -615,9 +630,9 @@ Interface::Interface()
     while (1) {
       if (revert_time && revert_time < millis()) {
         revert_time = 0;
-        view_page = sel_question;     // reset to reverted
+        view_page = sel_question;         // reset to reverted
         encoder_q.setCount(sel_question); // Set encoder back to question
-        updateDisplay(view_page);     // remove bar / refresh screen
+        updateDisplay(view_page);         // remove bar / refresh screen
         // Invert screen to show active
         oled.invertDisplay(true);
         i2c.lock();
@@ -638,17 +653,17 @@ Interface::Interface()
           oled.display();
           i2c.unlock();
           delay(1000);
-          //network.uploadAnswers();
+          // network.uploadAnswers();
           revert_time = 1; // force revert
         } else {
           cur_perc = ans_corr[sel_question]; // update percentage
           q_state = false;                   // reset button
           running = true;                    // we are now running a question
-          revert_time = 0; // reset revert time if selected question
-          sel_question = view_page;     // we clicked = we want
+          revert_time = 0;          // reset revert time if selected question
+          sel_question = view_page; // we clicked = we want
           encoder_q.setCount(sel_question); // Set encoder back to question
                                             // (incase changed during push)
-          updateDisplay(view_page);     // remove bar / refresh screen
+          updateDisplay(view_page);         // remove bar / refresh screen
 
           // select the question and start
 
@@ -690,7 +705,7 @@ Interface::Interface()
         }
 
         // Change page
-        view_page = encoder_q.getCount() % (exam_questions+1);
+        view_page = encoder_q.getCount() % (exam_questions + 1);
 
         // Check if we're on "special interface screen"
         if (view_page == exam_questions) {
