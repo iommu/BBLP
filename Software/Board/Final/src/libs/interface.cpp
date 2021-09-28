@@ -40,7 +40,7 @@ void tBtnPress() { t_state = true; }
 
 IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
                          uint8_t question_index = 0)
-    : question_index(question_index) {
+    : question_index(question_index), max_exp_bits(0) {
   Serial.println("Initializing MUX OLEDs");
   Wire1.begin(21, 22); // RE-setup for some reason?
 
@@ -75,7 +75,6 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
     waves_exp[index].setStorage(storage_array[index]);
   }
 
-  max_exp_bits = 0; // Reset
   Serial.println("setting waves");
   Serial.println(j_output.size());
   Serial.println(j_input.size());
@@ -307,7 +306,7 @@ void IOInterface::draw(uint8_t sel, uint start_bit, int delta) {
     if (draw_to - draw_delta < 0)
       draw_delta = draw_to;
 
-    uint y_loc;
+    uint y_loc = 0;
 
     for (int8_t index = draw_to; index >= draw_to - draw_delta; index--) {
       Serial.println(index);
