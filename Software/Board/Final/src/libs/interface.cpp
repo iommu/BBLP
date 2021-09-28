@@ -172,7 +172,7 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
       State pins[4];
 
       i2c.lock();
-      readPins(pins);
+      readPins(pins, question_index != 0); // Note, the PCF can't actually read the output of the TTL logic ICs we're using EXCEPT for the OR IC, so if the question == OR IC, then enable floating reading
       i2c.unlock();
 
       uint8_t write_index = pixel_shift / 20;
@@ -217,7 +217,7 @@ void IOInterface::draw8(int shift) {
 
     i2c.lock();
     writePins(pins);
-    readPins(pins);
+    readPins(pins, question_index != 0);
     i2c.unlock();
 
     uint8_t write_index = pixel_shift / 20;
@@ -360,7 +360,7 @@ void IOInterface::checkQuestion() {
 
     i2c.lock();
     writePins(pins);
-    readPins(pins);
+    readPins(pins, question_index != 0);
     i2c.unlock();
 
     Serial.print("Pass ");
