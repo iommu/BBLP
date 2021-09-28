@@ -591,7 +591,7 @@ Interface::Interface()
         }
         // Wrap if neg
         if (encoder_q.getCount() < 0) {
-          encoder_q.setCount(exam_questions - 1);
+          encoder_q.setCount(exam_questions);
         }
 
         // Change page
