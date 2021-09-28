@@ -170,7 +170,10 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
       old_count = new_count;
     } else { // If not updating all, check individual
       State pins[4];
+
+      i2c.lock();
       readPins(pins);
+      i2c.unlock();
 
       uint8_t write_index = pixel_shift / 20;
       uint start_bit = pixel_shift / PIXELS_PER_BIT; // First display bit
@@ -211,8 +214,11 @@ void IOInterface::draw8(int shift) {
     State pins[] = {
         (State)waves_exp[0][start_bit], (State)waves_exp[1][start_bit],
         (State)waves_exp[2][start_bit], (State)waves_exp[3][start_bit]};
+
+    i2c.lock();
     writePins(pins);
     readPins(pins);
+    i2c.unlock();
 
     uint8_t write_index = pixel_shift / 20;
     recorded[0].setCru(write_index, pins[0]);
@@ -331,6 +337,7 @@ void IOInterface::draw(uint8_t sel, uint start_bit, int delta) {
     }
   }
   Serial.println(sel);
+  
   i2c.lock();
   display[sel].display();
   i2c.unlock();
@@ -350,8 +357,12 @@ void IOInterface::checkQuestion() {
   for (uint8_t index = 0; index < max_exp_bits; index++) {
     State pins[] = {(State)waves_exp[0][index], (State)waves_exp[1][index],
                     (State)waves_exp[2][index], (State)waves_exp[3][index]};
+
+    i2c.lock();
     writePins(pins);
     readPins(pins);
+    i2c.unlock();
+
     Serial.print("Pass ");
     Serial.print(index);
     if ((!waves_exp[4].size() || (State)waves_exp[4][index] == pins[0]) &&
