@@ -127,14 +127,6 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
 
     // Set storage array for waves_exp "Vector" clone
     waves_exp[index].setStorage(storage_array[index]);
-    // waves_exp[index].push_back(0);
-    // waves_exp[index].push_back(1);
-    // waves_exp[index].push_back(0);
-    // waves_exp[index].push_back(1);
-    // waves_exp[index].push_back(0);
-    // waves_exp[index].push_back(1);
-    // waves_exp[index].push_back(0);
-    // waves_exp[index].push_back(1);
   }
 
   max_exp_bits = 0; // Reset
