@@ -9,7 +9,7 @@ MUXPins::MUXPins() : pcf(0x20) /* set I2C addr */ {
 void MUXPins::writePins(State pins[4]) {
   // Make sure not to write floating
   for (uint8_t index = 0; index < 4; index++) {
-    if (pins[index] = FLOATING) {
+    if (pins[index] == FLOATING) {
       pins[index] = FALSE;
     }
   }
