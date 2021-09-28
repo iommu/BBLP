@@ -1,5 +1,17 @@
 #include "modules.hpp"
 
+// Debug print defines
+
+#define DEBUG false
+
+#if DEBUG
+#define DEBUG_PRINT(...) Serial.print(__VA_ARGS__)
+#define DEBUG_PRINTLN(...) Serial.println(__VA_ARGS__)
+#else
+#define DEBUG_PRINT(...)
+#define DEBUG_PRINTLN(...)
+#endif
+
 // MUXPins : Octa IO expander (4 Input / 4 Output)
 
 MUXPins::MUXPins() : pcf(0x20) /* set I2C addr */ {
@@ -7,17 +19,23 @@ MUXPins::MUXPins() : pcf(0x20) /* set I2C addr */ {
 }
 
 void MUXPins::writePins(State pins[4]) {
-  // Make sure not to write floating
-  for (uint8_t index = 0; index < 4; index++) {
-    if (pins[index] == FLOATING) {
-      pins[index] = FALSE;
+  DEBUG_PRINT("Writing MUX Pins : ");
+
+  for (uint8_t pin_index = 0; pin_index < 4; pin_index++) {
+    // Make sure not to write floating
+    if (pins[pin_index] == FLOATING) {
+      pins[pin_index] = FALSE;
     }
+
+    // Write pins
+    pcf.write(mix[pin_index], pins[pin_index]);
+
+    // Print debug
+    DEBUG_PRINT((int)pins[pin_index]);
+    DEBUG_PRINT(",");
   }
-  // Write pins
-  pcf.write(mix[0], pins[0]);
-  pcf.write(mix[1], pins[1]);
-  pcf.write(mix[2], pins[2]);
-  pcf.write(mix[3], pins[3]);
+
+  DEBUG_PRINTLN();
 }
 
 void MUXPins::readPins(State pins[4]) {
@@ -33,25 +51,18 @@ void MUXPins::readPins(State pins[4]) {
   pcf.toggleMask(mask);         // Toggle output pins
   uint8_t read2 = pcf.read8();  // Read pass 2
 
-  Serial.println("reading");
-  Serial.print(read1, BIN);
-  Serial.print(" : ");
-  Serial.print(read2, BIN);
+  DEBUG_PRINT("Reading MUX Pins : ");
+  DEBUG_PRINT(read1, BIN);
+  DEBUG_PRINT(" == ");
+  DEBUG_PRINTLN(read2, BIN);
 
-  // Assign pins using conditional
-  pins[0] = (read1 >> mix[4] & 1) == (read2 >> mix[4] & 1)
-                ? (State)(read1 >> mix[4] & 1)
-                : FLOATING;
-  pins[1] = (read1 >> mix[5] & 1) == (read2 >> mix[5] & 1)
-                ? (State)(read1 >> mix[5] & 1)
-                : FLOATING;
-  Serial.println(pins[1]);
-  pins[2] = (read1 >> mix[6] & 1) == (read2 >> mix[6] & 1)
-                ? (State)(read1 >> mix[6] & 1)
-                : FLOATING;
-  pins[3] = (read1 >> mix[7] & 1) == (read2 >> mix[7] & 1)
-                ? (State)(read1 >> mix[7] & 1)
-                : FLOATING;
+  for (uint8_t pin_index = 0; pin_index < 4; pin_index++) {
+    // Assign pins using conditional
+    pins[pin_index] =
+        (read1 >> mix[pin_index + 4] & 1) == (read2 >> mix[pin_index + 4] & 1)
+            ? (State)(read1 >> mix[pin_index + 4] & 1)
+            : FLOATING;
+  }
 }
 
 // RGBLED
