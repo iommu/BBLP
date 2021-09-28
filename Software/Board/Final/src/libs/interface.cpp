@@ -9,10 +9,10 @@ uint8_t ans_corr[10] = {0}; // Answer correctness array, Max 10 questions
 // BItArray : Bit array handling class for large array of
 
 void CrumbArray::setCru(uint16_t index, uint8_t crumb) {
-  Serial.print("setting : ");
-  Serial.print(index);
-  Serial.print(" to ");
-  Serial.println(crumb, BIN);
+  // Serial.print("setting : ");
+  // Serial.print(index);
+  // Serial.print(" to ");
+  // Serial.println(crumb, BIN);
 
   index *= 2; // double as we're index every second bit
   bits[index / 32] &= ~(0b11 << (index % 32)); // Force crumb to 0
@@ -20,14 +20,11 @@ void CrumbArray::setCru(uint16_t index, uint8_t crumb) {
 }
 
 uint8_t CrumbArray::getCru(uint16_t index) {
-  Serial.print("getting : ");
-  Serial.print(index);
-  Serial.print(" : ");
   index *= 2; // double as we're index every second bit
-  Serial.println((bits[index / 32] >> (index % 32)) & 0b11);
-  Serial.print(index / 32);
-  Serial.print(" , ");
-  Serial.println(index % 32);
+  // Serial.println((bits[index / 32] >> (index % 32)) & 0b11);
+  // Serial.print(index / 32);
+  // Serial.print(" , ");
+  // Serial.println(index % 32);
   return (bits[index / 32] >> (index % 32)) &
          0b11; // get bitshifted crumb via masking
 }
@@ -172,7 +169,7 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
       State pins[4];
 
       i2c.lock();
-      readPins(pins, question_index != 0); // Note, the PCF can't actually read the output of the TTL logic ICs we're using EXCEPT for the OR IC, so if the question == OR IC, then enable floating reading
+      readPins(pins, question_index == 0); // Note, the PCF can't actually read the output of the TTL logic ICs we're using EXCEPT for the OR IC, so if the question == OR IC, then enable floating reading
       i2c.unlock();
 
       uint8_t write_index = pixel_shift / 20;
@@ -217,7 +214,7 @@ void IOInterface::draw8(int shift) {
 
     i2c.lock();
     writePins(pins);
-    readPins(pins, question_index != 0);
+    readPins(pins, question_index == 0);
     i2c.unlock();
 
     uint8_t write_index = pixel_shift / 20;
@@ -360,7 +357,7 @@ void IOInterface::checkQuestion() {
 
     i2c.lock();
     writePins(pins);
-    readPins(pins, question_index != 0);
+    readPins(pins, question_index == 0);
     i2c.unlock();
 
     Serial.print("Pass ");

@@ -38,7 +38,7 @@ void MUXPins::writePins(State pins[4]) {
   DEBUG_PRINTLN();
 }
 
-void MUXPins::readPins(State pins[4]) {
+void MUXPins::readPins(State pins[4], bool floating) {
   // Note : PCF is very simple and uses a simple 8 bit register to read/write
   // values and hence does NOT have the ability to return a value determining if
   // the pin is floating. So instead what we do is toggle the pin and read
@@ -50,6 +50,7 @@ void MUXPins::readPins(State pins[4]) {
                  (1 << mix[7]); // Mask of all outputs
   pcf.toggleMask(mask);         // Toggle output pins
   uint8_t read2 = pcf.read8();  // Read pass 2
+  pcf.write8(read2 & ~mask);    // make inputs low
 
   DEBUG_PRINT("Reading MUX Pins : ");
   DEBUG_PRINT(read1, BIN);
@@ -57,11 +58,14 @@ void MUXPins::readPins(State pins[4]) {
   DEBUG_PRINTLN(read2, BIN);
 
   for (uint8_t pin_index = 0; pin_index < 4; pin_index++) {
-    // Assign pins using conditional
-    pins[pin_index] =
-        (read1 >> mix[pin_index + 4] & 1) == (read2 >> mix[pin_index + 4] & 1)
-            ? (State)(read1 >> mix[pin_index + 4] & 1)
-            : FLOATING;
+    if (floating)
+      // Assign pins using conditional
+      pins[pin_index] =
+          (read1 >> mix[pin_index + 4] & 1) == (read2 >> mix[pin_index + 4] & 1)
+              ? (State)(read1 >> mix[pin_index + 4] & 1)
+              : FLOATING;
+    else
+      pins[pin_index] = (State)(read2 >> mix[pin_index + 4] & 1); // Set to where pin pulled high
   }
 }
 

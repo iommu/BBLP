@@ -22,7 +22,7 @@ public:
   MUXPins();
 
   void writePins(State pins[4]);
-  void readPins(State pins[4]);
+  void readPins(State pins[4], bool floating);
 
 private:
   uint8_t mix[8] = {0, 5, 6, 7, 1, 2, 3, 4}; // Switch Pin names with pcf addr
