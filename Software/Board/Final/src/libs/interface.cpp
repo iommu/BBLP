@@ -169,7 +169,11 @@ IOInterface::IOInterface(JsonArray j_output, JsonArray j_input,
       State pins[4];
 
       i2c.lock();
-      readPins(pins, question_index == 0); // Note, the PCF can't actually read the output of the TTL logic ICs we're using EXCEPT for the OR IC, so if the question == OR IC, then enable floating reading
+      readPins(pins,
+               question_index ==
+                   0); // Note, the PCF can't actually read the output of the
+                       // TTL logic ICs we're using EXCEPT for the OR IC, so if
+                       // the question == OR IC, then enable floating reading
       i2c.unlock();
 
       uint8_t write_index = pixel_shift / 20;
@@ -529,6 +533,8 @@ Interface::Interface()
         oled.display();
         i2c.unlock();
       } else if ((q_state || cur_perc != ans_corr[sel_question]) && init) {
+        q_state = false; // reset button
+        
         // Check if we're on "special interface screen"
         if (encoder_q.getCount() % (exam_questions + 1) == exam_questions) {
           oled.clearDisplay();
@@ -544,10 +550,12 @@ Interface::Interface()
           i2c.unlock();
           delay(1000);
           // network.uploadAnswers();
-          revert_time = 1; // force revert
+          if (running)
+            revert_time = 1; // force revert if we can
+          else
+            encoder_q.setCount(0); // go back to first screen
         } else {
           cur_perc = ans_corr[sel_question]; // update percentage
-          q_state = false;                   // reset button
           running = true;                    // we are now running a question
           revert_time = 0;          // reset revert time if selected question
           sel_question = view_page; // we clicked = we want
