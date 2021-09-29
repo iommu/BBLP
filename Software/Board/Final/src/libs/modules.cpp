@@ -119,7 +119,7 @@ uint32_t NFC::getID() {
   bool success =
       nfc.readPassiveTargetID(PN532_MIFARE_ISO14443A, &uid[0], &uidLength);
   if (success) { // Can't actually communicate with Android :<
-    return 5386949;
+    return 3489765;
   }
   return 0;
 }
