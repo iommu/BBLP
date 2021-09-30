@@ -534,7 +534,7 @@ Interface::Interface()
         i2c.unlock();
       } else if ((q_state || cur_perc != ans_corr[sel_question]) && init) {
         q_state = false; // reset button
-        
+
         // Check if we're on "special interface screen"
         if (encoder_q.getCount() % (exam_questions + 1) == exam_questions) {
           oled.clearDisplay();
@@ -654,8 +654,8 @@ void Interface::updateDisplay(uint8_t question_num) {
   oled.print(ans_corr[question_num]);
   oled.print("%");
   oled.println(" done!");
-  ind_led.setRGB(250 - 25 * ans_corr[question_num], 25 * ans_corr[question_num],
-                 0);
+  ind_led.setRGB(250 - (float)((float)(2.5) * ans_corr[question_num]),
+                 (float)((float)(2.5) * ans_corr[question_num]), 0);
   ind_led.setRGB(0, 0, 0);
   i2c.lock();
   oled.display();
