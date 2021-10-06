@@ -408,7 +408,7 @@ Interface::Interface()
       ; // Don't proceed, loop forever
   }
 
-  bool debug = true;
+  bool debug = false;
   // Set rotation for messed up PCB :<
   oled.setRotation(2);
 
@@ -430,7 +430,7 @@ Interface::Interface()
   // Connect to wifi and get time
   network.updateTime();
 
-  if (!debug) { // Connect to wifi and pull server json
+  if (debug) { // Connect to wifi and pull server json
     oled.clearDisplay();
     Serial.println("Downloading questions from server");
     oled.invertDisplay(false);
@@ -443,6 +443,15 @@ Interface::Interface()
                     network.getQuestions()); // Convert network String to JSON
     exam_questions = j_exam["questions"].size();
   } else {
+        oled.clearDisplay();
+    Serial.println("Downloading questions from server");
+    oled.invertDisplay(false);
+    oled.setTextColor(SSD1306_WHITE);
+    oled.setTextSize(2);
+    oled.setCursor(1, 1);
+    oled.println(F("Getting   questions"));
+    oled.display();
+    delay(2000);
     deserializeJson(j_exam,
                     "{\"name\":\"test exam "
                     "1\",\"time\": \"20\", "
@@ -656,7 +665,6 @@ void Interface::updateDisplay(uint8_t question_num) {
   oled.println(" done!");
   ind_led.setRGB(250 - (float)((float)(2.5) * ans_corr[question_num]),
                  (float)((float)(2.5) * ans_corr[question_num]), 0);
-  ind_led.setRGB(0, 0, 0);
   i2c.lock();
   oled.display();
   i2c.unlock();

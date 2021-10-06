@@ -77,15 +77,21 @@ RGBLED::RGBLED(uint8_t r, uint8_t g, uint8_t b) {
   ledcSetup(0, 4000, 8);
   pinMode(13, OUTPUT); // G
   ledcAttachPin(13, 1);
-  ledcSetup(0, 4000, 8);
+  ledcSetup(1, 4000, 8);
   pinMode(14, OUTPUT); // B
   ledcAttachPin(14, 2);
-  ledcSetup(0, 4000, 8);
+  ledcSetup(2, 4000, 8);
   // Set inital led
   setRGB(r, g, b);
 }
 
 void RGBLED::setRGB(uint8_t r, uint8_t g, uint8_t b) {
+  Serial.println("RGB");
+  Serial.print(r);
+  Serial.print(" : ");
+    Serial.print(g);
+  Serial.print(" : ");
+    Serial.println(b);
   ledcWrite(0, 256 - r); // inverted because led is common anode
   ledcWrite(1, 256 - g); // Note: 256 not 255 as 256 is needed to turn PWM
   ledcWrite(2, 256 - b); // fully on and hence fully off on a common anode RGB
